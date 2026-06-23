@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPIc 실전 암기툴</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+  <style>
+    :root {
+      --primary:#2563eb; --primary2:#1d4ed8; --bg:#f3f5f8; --card:#fff; --text:#1f2937; --muted:#6b7280;
+      --hard:#fff1e8; --done:#eaf8ef; --accent:#fff3a3; --emphasis:#ffe0e0; --border:#e5e7eb;
+      --danger:#b91c1c; --warning:#d97706; --success:#15803d; --dark:#374151;
+    }
+    * { box-sizing:border-box; }
+    body { font-family:Arial, sans-serif; margin:0; padding:16px; background:var(--bg); color:var(--text); }
+    h1 { text-align:center; font-size:23px; margin:10px 0 6px; }
+    .summary { text-align:center; color:var(--muted); margin-bottom:14px; font-size:14px; line-height:1.5; }
+    .card { background:var(--card); padding:15px; border-radius:16px; margin-bottom:12px; box-shadow:0 2px 10px rgba(0,0,0,.08); border:1px solid var(--border); }
+    .card.hardBox { background:var(--hard); border-color:#fb923c; }
+    .card.doneBox { background:var(--done); border-color:#4ade80; }
+    .label { font-size:13px; color:var(--muted); margin-bottom:7px; font-weight:bold; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    select, textarea, button, input { width:100%; padding:13px; margin-top:8px; font-size:16px; border-radius:12px; }
+    select, textarea, input { background:#fff; border:1px solid #cfd4dc; }
+    textarea { min-height:200px; line-height:1.5; font-family:Arial,sans-serif; display:none; }
+    button { border:0; color:white; background:var(--primary); font-weight:bold; }
+    button:active { transform:scale(.99); }
+    .secondary { background:var(--dark); } .warning { background:var(--warning); } .danger { background:var(--danger); } .success { background:var(--success); }
+    .light { background:#eef2f7; color:#111827; border:1px solid #d1d5db; }
+    .ghost { background:white; color:#111827; border:1px solid #d1d5db; }
+    #meta { color:var(--primary); font-size:14px; margin-bottom:8px; font-weight:bold; line-height:1.5; }
+    #question { font-size:21px; font-weight:bold; line-height:1.5; white-space:pre-line; }
+    #answer { font-size:18px; line-height:1.65; white-space:pre-line; display:none; }
+    #speechText { white-space:pre-line; line-height:1.55; font-size:16px; min-height:60px; color:#111827; }
+    mark.keyword { background:var(--accent); padding:1px 3px; border-radius:4px; }
+    mark.emphasis { background:var(--emphasis); padding:1px 3px; border-radius:4px; font-weight:bold; }
+    .badge { display:inline-block; padding:4px 8px; margin:3px 4px 6px 0; border-radius:999px; font-size:12px; font-weight:bold; }
+    .badgeHard { background:#fb923c; color:white; } .badgeDone { background:#22c55e; color:white; } .badgeWrong { background:#ef4444; color:white; } .badgeNormal { background:#dbe4f0; color:#1f2937; }
+    .star { font-size:27px; color:#c7c7c7; cursor:pointer; padding-right:3px; user-select:none; }
+    .star.on { color:#f59e0b; }
+    .timer { text-align:center; font-size:34px; font-weight:bold; margin:8px 0; color:#111827; }
+    .timerSub { text-align:center; color:var(--muted); font-size:13px; }
+    .pill { display:inline-block; padding:5px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; font-size:12px; font-weight:bold; margin:2px; }
+    .small { font-size:13px; color:#6b7280; line-height:1.55; }
+    .hidden { display:none !important; }
+    audio { width:100%; margin-top:8px; }
+  </style>
+  <script src="data.js"></script>
+</head>
+<body>
+  <h1>OPIc 실전 암기툴</h1>
+  <div class="summary">
+    총 <span id="totalCount"></span>개 |
+    어려운 문제 <span id="hardCount"></span>개 |
+    틀린 문제 <span id="wrongCount"></span>개 |
+    암기완료 <span id="doneCount"></span>개
+  </div>
+
+  <div class="card">
+    <div class="label">학습 모드</div>
+    <select id="modeSelect" onchange="changeMode()">
+      <option value="STUDY">일반 학습</option>
+      <option value="EXAM">시험모드</option>
+    </select>
+
+    <div id="examSetting" class="hidden">
+      <div class="grid2">
+        <input id="examCount" type="number" value="10" min="1" max="30" />
+        <button class="success" onclick="startExam()">시험 시작</button>
+      </div>
+      <div class="small">시험모드: 문제를 연속 출제하고, 성공/실패 결과를 집계합니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">카테고리</div>
+    <select id="categoryFilter" onchange="resetScreen()">
+      <option value="ALL">전체 문제</option>
+      <option value="HARD">어려운 문제</option>
+      <option value="WRONG">틀린 문제</option>
+      <option value="DONE">외운 문제</option>
+      <option value="NOT_DONE">아직 외우는 중</option>
+    </select>
+    <div class="label" style="margin-top:12px;">토픽 필터</div>
+    <select id="topicFilter" onchange="resetScreen()"><option value="ALL">전체 토픽</option></select>
+  </div>
+
+  <div id="questionBox" class="card">
+    <div class="label">문제</div>
+    <div id="meta"></div>
+    <div id="badges"></div>
+    <div id="question">아래 버튼을 눌러 문제를 뽑으세요.</div>
+    <div style="font-size:15px;line-height:1.7;margin-top:10px;">
+      암기 별점:
+      <span class="star" onclick="setStars(1)">★</span>
+      <span class="star" onclick="setStars(2)">★</span>
+      <span class="star" onclick="setStars(3)">★</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">답변 시간</div>
+    <div class="timer" id="timer">00:00</div>
+    <div class="timerSub" id="timeJudge">답변 시작 버튼을 누르면 시간이 측정됩니다.</div>
+    <div class="grid2">
+      <button class="success" onclick="startAnswerSession()">답변 시작</button>
+      <button class="danger" onclick="stopAnswerSession()">답변 종료</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">녹음</div>
+    <div class="grid2">
+      <button class="success" onclick="startRecording()">녹음 시작</button>
+      <button class="danger" onclick="stopRecording()">녹음 종료</button>
+    </div>
+    <audio id="audioPlayer" controls class="hidden"></audio>
+    <button class="light hidden" id="downloadAudioBtn" onclick="downloadRecording()">녹음 파일 저장</button>
+    <div class="small" id="recordStatus">녹음 대기 중</div>
+  </div>
+
+  <div class="card">
+    <div class="label">음성 텍스트 전환</div>
+    <div class="grid2">
+      <button class="success" onclick="startSpeech()">음성 인식 시작</button>
+      <button class="danger" onclick="stopSpeech()">음성 인식 종료</button>
+    </div>
+    <div id="speechText">인식된 문장이 여기에 표시됩니다.</div>
+    <button class="light" onclick="clearSpeechText()">텍스트 지우기</button>
+  </div>
+
+  <div class="card">
+    <div class="label">답변</div>
+    <div id="answer"></div>
+    <textarea id="answerEditor"></textarea>
+  </div>
+
+  <button onclick="pickRandomQuestion()">랜덤 문제 뽑기</button>
+  <button class="secondary" onclick="toggleAnswer()">답변 보기 / 숨기기</button>
+
+  <div class="grid2">
+    <button class="warning" onclick="toggleHard()">어려운 문제 선택/해제</button>
+    <button class="danger" onclick="toggleWrong()">틀린 문제 선택/해제</button>
+  </div>
+
+  <div class="grid3">
+    <button class="success" onclick="markSuccess()">암기 성공</button>
+    <button class="danger" onclick="markFail()">암기 실패</button>
+    <button class="light" onclick="clearStars()">별 해제</button>
+  </div>
+
+  <div class="grid2">
+    <button class="success" onclick="editAnswer()">답변 수정</button>
+    <button class="danger" onclick="saveAnswer()">수정 저장</button>
+  </div>
+
+  <div id="examPanel" class="card hidden">
+    <div class="label">시험 결과</div>
+    <div id="examStatus"></div>
+    <div class="grid2">
+      <button class="success" onclick="examSuccess()">이번 문제 성공</button>
+      <button class="danger" onclick="examFail()">이번 문제 실패</button>
+    </div>
+    <button class="secondary" onclick="endExam()">시험 종료</button>
+  </div>
+
+  <div class="card">
+    <button class="light" onclick="exportProgress()">진행상태 백업</button>
+    <button class="light" onclick="exportAllData()">전체 데이터 백업</button>
+    <div class="small">
+      참고: 녹음/음성인식은 Android Chrome 또는 Acode Preview 환경에서 권한 허용이 필요합니다.
+      일부 브라우저에서는 file:// 직접 실행 시 마이크 권한이 제한될 수 있습니다.
+    </div>
+  </div>
+
+<script>
+const defaultItems = window.OPIC_DEFAULT_ITEMS || [];
+
+let progress = loadProgress();
+let opicItems = mergeDefaultWithProgress(defaultItems);
+let currentItem = null;
+
+let timerInterval = null;
+let answerStartTime = null;
+let lastDurationSec = 0;
+
+let mediaRecorder = null;
+let audioChunks = [];
+let recordedBlob = null;
+
+let recognition = null;
+let recognizing = false;
+let finalSpeechText = "";
+
+let exam = {
+  active:false,
+  list:[],
+  index:0,
+  success:0,
+  fail:0
+};
+
+function makeKey(item) {
+  return item.id || item.key || String(item.question || "").toLowerCase().trim().replace(/\s+/g, " ");
+}
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem("opicProgressV4") || localStorage.getItem("opicProgressV3") || "{}"); }
+  catch(e) { return {}; }
+}
+
+function saveProgress() {
+  localStorage.setItem("opicProgressV4", JSON.stringify(progress));
+  updateSummary();
+}
+
+function mergeDefaultWithProgress(defaults) {
+  return defaults.map(item => {
+    const key = makeKey(item);
+    const old = progress[key] || {};
+    return {
+      ...item,
+      isHard: !!old.isHard,
+      isWrong: !!old.isWrong,
+      stars: old.stars || 0,
+      answer: old.editedAnswer || item.answer,
+      editedAnswer: old.editedAnswer || "",
+      attempts: old.attempts || 0,
+      successCount: old.successCount || 0,
+      failCount: old.failCount || 0,
+      lastDurationSec: old.lastDurationSec || 0,
+      lastSpeechText: old.lastSpeechText || ""
+    };
+  });
+}
+
+function syncCurrentToProgress() {
+  if (!currentItem) return;
+  const key = makeKey(currentItem);
+  progress[key] = {
+    isHard: !!currentItem.isHard,
+    isWrong: !!currentItem.isWrong,
+    stars: currentItem.stars || 0,
+    editedAnswer: currentItem.editedAnswer || "",
+    attempts: currentItem.attempts || 0,
+    successCount: currentItem.successCount || 0,
+    failCount: currentItem.failCount || 0,
+    lastDurationSec: currentItem.lastDurationSec || 0,
+    lastSpeechText: currentItem.lastSpeechText || ""
+  };
+  saveProgress();
+}
+
+function init() {
+  buildTopicFilter();
+  updateSummary();
+  renderStars(0);
+  setupSpeechRecognition();
+}
+
+function buildTopicFilter() {
+  const filter = document.getElementById("topicFilter");
+  filter.innerHTML = '<option value="ALL">전체 토픽</option>';
+  [...new Set(opicItems.map(item => item.topic))].sort().forEach(topic => {
+    const option = document.createElement("option");
+    option.value = topic;
+    option.innerText = topic;
+    filter.appendChild(option);
+  });
+}
+
+function updateSummary() {
+  document.getElementById("totalCount").innerText = opicItems.length;
+  document.getElementById("hardCount").innerText = opicItems.filter(x => x.isHard).length;
+  document.getElementById("wrongCount").innerText = opicItems.filter(x => x.isWrong).length;
+  document.getElementById("doneCount").innerText = opicItems.filter(x => (x.stars || 0) >= 3).length;
+}
+
+function changeMode() {
+  const mode = document.getElementById("modeSelect").value;
+  document.getElementById("examSetting").classList.toggle("hidden", mode !== "EXAM");
+  document.getElementById("examPanel").classList.toggle("hidden", mode !== "EXAM" || !exam.active);
+}
+
+function getFilteredItems() {
+  const category = document.getElementById("categoryFilter").value;
+  const topic = document.getElementById("topicFilter").value;
+  let list = opicItems;
+  if (category === "HARD") list = list.filter(item => item.isHard);
+  if (category === "WRONG") list = list.filter(item => item.isWrong);
+  if (category === "DONE") list = list.filter(item => (item.stars || 0) >= 3);
+  if (category === "NOT_DONE") list = list.filter(item => (item.stars || 0) < 3);
+  if (topic !== "ALL") list = list.filter(item => item.topic === topic);
+  return list;
+}
+
+function pickRandomQuestion() {
+  const list = getFilteredItems();
+  if (list.length === 0) return alert("선택한 카테고리/토픽에 문제가 없습니다.");
+  currentItem = list[Math.floor(Math.random() * list.length)];
+  renderCurrentItem(false);
+}
+
+function renderCurrentItem(showAnswer) {
+  document.getElementById("meta").innerText = "[" + currentItem.topic + "] " + currentItem.docName;
+  document.getElementById("question").innerHTML = highlightText(currentItem.question, currentItem.questionHighlights || [], "keyword");
+  const answerBox = document.getElementById("answer");
+  answerBox.innerHTML = highlightText(currentItem.answer, currentItem.answerEmphasis || [], "emphasis");
+  answerBox.style.display = showAnswer ? "block" : "none";
+  const editor = document.getElementById("answerEditor");
+  editor.value = currentItem.answer;
+  editor.style.display = "none";
+  document.getElementById("speechText").innerText = currentItem.lastSpeechText || "인식된 문장이 여기에 표시됩니다.";
+  renderBadges();
+  renderStars(currentItem.stars || 0);
+  renderBoxStatus();
+  resetTimerDisplay();
+}
+
+function highlightText(text, targets, className) {
+  let safe = escapeHtml(text || "");
+  targets.forEach(target => {
+    if (!target) return;
+    const reg = new RegExp("(" + escapeRegExp(escapeHtml(target)) + ")", "gi");
+    safe = safe.replace(reg, '<mark class="' + className + '">$1</mark>');
+  });
+  return safe.replace(/\n/g, "<br>");
+}
+
+function escapeHtml(str) {
+  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function escapeRegExp(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function renderBadges() {
+  const badges = [];
+  if (currentItem.isHard) badges.push('<span class="badge badgeHard">어려운 문제</span>');
+  if (currentItem.isWrong) badges.push('<span class="badge badgeWrong">틀린 문제</span>');
+  if ((currentItem.stars || 0) >= 3) badges.push('<span class="badge badgeDone">암기완료</span>');
+  if (!currentItem.isHard && !currentItem.isWrong && (currentItem.stars || 0) < 3) badges.push('<span class="badge badgeNormal">학습중</span>');
+  if (currentItem.lastDurationSec) badges.push('<span class="badge badgeNormal">최근 ' + formatTime(currentItem.lastDurationSec) + '</span>');
+  document.getElementById("badges").innerHTML = badges.join("");
+}
+
+function renderBoxStatus() {
+  const qBox = document.getElementById("questionBox");
+  qBox.classList.remove("hardBox", "doneBox");
+  if ((currentItem.stars || 0) >= 3) qBox.classList.add("doneBox");
+  else if (currentItem.isHard || currentItem.isWrong) qBox.classList.add("hardBox");
+}
+
+function toggleAnswer() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  const answerBox = document.getElementById("answer");
+  const editor = document.getElementById("answerEditor");
+  if (editor.style.display === "block") return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");
+  answerBox.style.display = answerBox.style.display === "none" ? "block" : "none";
+}
+
+function toggleHard() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.isHard = !currentItem.isHard;
+  syncCurrentToProgress();
+  renderCurrentItem(document.getElementById("answer").style.display === "block");
+}
+
+function toggleWrong() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.isWrong = !currentItem.isWrong;
+  syncCurrentToProgress();
+  renderCurrentItem(document.getElementById("answer").style.display === "block");
+}
+
+function setStars(count) {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.stars = count;
+  if (count >= 3) currentItem.isWrong = false;
+  syncCurrentToProgress();
+  renderCurrentItem(document.getElementById("answer").style.display === "block");
+}
+
+function clearStars() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.stars = 0;
+  syncCurrentToProgress();
+  renderCurrentItem(document.getElementById("answer").style.display === "block");
+}
+
+function renderStars(count) {
+  document.querySelectorAll(".star").forEach((star, idx) => {
+    idx < count ? star.classList.add("on") : star.classList.remove("on");
+  });
+}
+
+function markSuccess() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.attempts = (currentItem.attempts || 0) + 1;
+  currentItem.successCount = (currentItem.successCount || 0) + 1;
+  currentItem.stars = Math.min(3, (currentItem.stars || 0) + 1);
+  if (currentItem.stars >= 3) currentItem.isWrong = false;
+  currentItem.lastDurationSec = lastDurationSec || currentItem.lastDurationSec || 0;
+  syncCurrentToProgress();
+  renderCurrentItem(true);
+}
+
+function markFail() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  currentItem.attempts = (currentItem.attempts || 0) + 1;
+  currentItem.failCount = (currentItem.failCount || 0) + 1;
+  currentItem.isWrong = true;
+  currentItem.isHard = true;
+  currentItem.stars = Math.max(0, (currentItem.stars || 0) - 1);
+  currentItem.lastDurationSec = lastDurationSec || currentItem.lastDurationSec || 0;
+  syncCurrentToProgress();
+  renderCurrentItem(true);
+}
+
+function editAnswer() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  document.getElementById("answer").style.display = "none";
+  document.getElementById("answerEditor").style.display = "block";
+}
+
+function saveAnswer() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  const editor = document.getElementById("answerEditor");
+  if (editor.style.display !== "block") return alert("먼저 '답변 수정'을 누르세요.");
+  currentItem.answer = editor.value;
+  currentItem.editedAnswer = editor.value;
+  syncCurrentToProgress();
+  renderCurrentItem(true);
+  alert("답변을 저장했습니다.");
+}
+
+function startAnswerSession() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  stopAnswerSession(false);
+  answerStartTime = Date.now();
+  lastDurationSec = 0;
+  timerInterval = setInterval(() => {
+    const sec = Math.floor((Date.now() - answerStartTime) / 1000);
+    document.getElementById("timer").innerText = formatTime(sec);
+    document.getElementById("timeJudge").innerText = judgeTime(sec);
+  }, 250);
+}
+
+function stopAnswerSession(showAlert=true) {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  if (answerStartTime) {
+    lastDurationSec = Math.floor((Date.now() - answerStartTime) / 1000);
+    answerStartTime = null;
+    document.getElementById("timer").innerText = formatTime(lastDurationSec);
+    document.getElementById("timeJudge").innerText = judgeTime(lastDurationSec);
+    if (currentItem) {
+      currentItem.lastDurationSec = lastDurationSec;
+      syncCurrentToProgress();
+      renderBadges();
+    }
+  }
+}
+
+function resetTimerDisplay() {
+  lastDurationSec = currentItem ? (currentItem.lastDurationSec || 0) : 0;
+  document.getElementById("timer").innerText = formatTime(lastDurationSec);
+  document.getElementById("timeJudge").innerText = lastDurationSec ? judgeTime(lastDurationSec) : "답변 시작 버튼을 누르면 시간이 측정됩니다.";
+}
+
+function formatTime(sec) {
+  sec = Math.max(0, sec || 0);
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  return m + ":" + s;
+}
+
+function judgeTime(sec) {
+  if (sec < 20) return "짧음: 답변을 더 확장하세요.";
+  if (sec < 40) return "롤플레이/짧은 답변에는 가능, 묘사/경험은 조금 짧습니다.";
+  if (sec <= 90) return "적절: 오픽 답변 시간으로 좋습니다.";
+  return "김: 핵심 위주로 줄이는 연습이 필요합니다.";
+}
+
+async function startRecording() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    return alert("이 브라우저는 녹음을 지원하지 않습니다.");
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    audioChunks = [];
+    recordedBlob = null;
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      recordedBlob = new Blob(audioChunks, { type:"audio/webm" });
+      const url = URL.createObjectURL(recordedBlob);
+      const player = document.getElementById("audioPlayer");
+      player.src = url;
+      player.classList.remove("hidden");
+      document.getElementById("downloadAudioBtn").classList.remove("hidden");
+      document.getElementById("recordStatus").innerText = "녹음 완료";
+      stream.getTracks().forEach(track => track.stop());
+    };
+    mediaRecorder.start();
+    document.getElementById("recordStatus").innerText = "녹음 중...";
+  } catch(e) {
+    alert("마이크 권한이 필요합니다. Chrome 또는 Acode Preview에서 권한을 허용하세요.");
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+}
+
+function downloadRecording() {
+  if (!recordedBlob) return alert("저장할 녹음 파일이 없습니다.");
+  const url = URL.createObjectURL(recordedBlob);
+  const a = document.createElement("a");
+  const id = currentItem ? makeKey(currentItem) : "opic";
+  a.href = url;
+  a.download = id + "_" + new Date().toISOString().slice(0,19).replace(/:/g,"-") + ".webm";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function setupSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById("speechText").innerText = "이 브라우저는 음성 텍스트 전환을 지원하지 않습니다. Android Chrome에서 테스트하세요.";
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.onresult = (event) => {
+    let interim = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const txt = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finalSpeechText += txt + "\n";
+      else interim += txt;
+    }
+    const output = finalSpeechText + (interim ? "\n[진행중] " + interim : "");
+    document.getElementById("speechText").innerText = output || "인식 중...";
+    if (currentItem) {
+      currentItem.lastSpeechText = output;
+      syncCurrentToProgress();
+    }
+  };
+  recognition.onerror = () => {
+    recognizing = false;
+  };
+  recognition.onend = () => {
+    recognizing = false;
+  };
+}
+
+function startSpeech() {
+  if (!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if (!recognition) return alert("이 브라우저는 음성 텍스트 전환을 지원하지 않습니다.");
+  if (recognizing) return;
+  finalSpeechText = "";
+  recognizing = true;
+  recognition.start();
+}
+
+function stopSpeech() {
+  if (recognition && recognizing) recognition.stop();
+  recognizing = false;
+}
+
+function clearSpeechText() {
+  finalSpeechText = "";
+  document.getElementById("speechText").innerText = "인식된 문장이 여기에 표시됩니다.";
+  if (currentItem) {
+    currentItem.lastSpeechText = "";
+    syncCurrentToProgress();
+  }
+}
+
+function startExam() {
+  const count = Math.max(1, Math.min(30, parseInt(document.getElementById("examCount").value || "10")));
+  const pool = getFilteredItems();
+  if (pool.length === 0) return alert("시험에 사용할 문제가 없습니다.");
+  exam.list = shuffle([...pool]).slice(0, Math.min(count, pool.length));
+  exam.index = 0;
+  exam.success = 0;
+  exam.fail = 0;
+  exam.active = true;
+  document.getElementById("examPanel").classList.remove("hidden");
+  showExamQuestion();
+}
+
+function showExamQuestion() {
+  if (!exam.active || exam.index >= exam.list.length) return endExam();
+  currentItem = exam.list[exam.index];
+  renderCurrentItem(false);
+  updateExamStatus();
+}
+
+function updateExamStatus() {
+  document.getElementById("examStatus").innerHTML =
+    '<span class="pill">진행 ' + (exam.index + 1) + ' / ' + exam.list.length + '</span>' +
+    '<span class="pill">성공 ' + exam.success + '</span>' +
+    '<span class="pill">실패 ' + exam.fail + '</span>';
+}
+
+function examSuccess() {
+  if (!exam.active) return;
+  markSuccess();
+  exam.success++;
+  exam.index++;
+  showExamQuestion();
+}
+
+function examFail() {
+  if (!exam.active) return;
+  markFail();
+  exam.fail++;
+  exam.index++;
+  showExamQuestion();
+}
+
+function endExam() {
+  if (!exam.active) return;
+  const total = exam.success + exam.fail;
+  const rate = total ? Math.round((exam.success / total) * 100) : 0;
+  document.getElementById("examStatus").innerHTML =
+    '<b>시험 종료</b><br>총 ' + total + '문제 / 성공 ' + exam.success + ' / 실패 ' + exam.fail + '<br>성공률 ' + rate + '%';
+  exam.active = false;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function resetScreen() {
+  currentItem = null;
+  document.getElementById("meta").innerText = "";
+  document.getElementById("badges").innerHTML = "";
+  document.getElementById("question").innerText = "아래 버튼을 눌러 문제를 뽑으세요.";
+  document.getElementById("answer").innerText = "";
+  document.getElementById("answer").style.display = "none";
+  document.getElementById("answerEditor").style.display = "none";
+  document.getElementById("answerEditor").value = "";
+  document.getElementById("questionBox").classList.remove("hardBox", "doneBox");
+  document.getElementById("speechText").innerText = "인식된 문장이 여기에 표시됩니다.";
+  document.getElementById("timer").innerText = "00:00";
+  document.getElementById("timeJudge").innerText = "답변 시작 버튼을 누르면 시간이 측정됩니다.";
+  renderStars(0);
+}
+
+function exportProgress() {
+  downloadJson(progress, "opic_progress_backup.json");
+}
+
+function exportAllData() {
+  downloadJson(opicItems, "opic_full_data_backup.json");
+}
+
+function downloadJson(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+init();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js").catch(function (err) {
+      console.log("Service worker registration failed:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>

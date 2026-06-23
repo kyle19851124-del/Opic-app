@@ -1,0 +1,23 @@
+{
+  "name": "OPIc 실전 암기툴",
+  "short_name": "OPIc암기",
+  "description": "OPIc 문제 랜덤 출제, 답변 숨김, 녹음, 음성 텍스트 전환, 시험모드",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f8",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
