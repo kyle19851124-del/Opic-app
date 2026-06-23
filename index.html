@@ -56,7 +56,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 </style>
 
 <style>
-/* v9.0 UX compact layout */
+/* v9.1 UX compact layout */
 :root{--quickbar-h:118px}
 .app{padding-bottom:136px}
 .header{padding:10px 14px}
@@ -95,12 +95,22 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 }
 </style>
 
+
+<style>
+/* v9.1: recording controls always visible */
+.quickTopInner{grid-template-columns:repeat(3,1fr)!important}
+.quickTop button{height:44px!important;font-size:12px!important}
+.app{padding-bottom:168px!important}
+.actionDock .grid3 button{height:44px!important}
+@media(min-width:520px){.quickTopInner{grid-template-columns:repeat(6,1fr)!important}}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div class="headerRow">
-      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v9.0</span></div></div>
+      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v9.1</span></div></div>
       <button class="light" onclick="toggleSettings()" style="max-width:72px;margin:0;padding:8px;font-size:13px">⚙ 설정</button><select id="themeSelect" onchange="setTheme(this.value)" style="max-width:110px;margin:0;padding:8px;font-size:13px">
         <option value="comfort">눈편한</option><option value="light">라이트</option><option value="dark">다크</option>
       </select>
@@ -113,6 +123,8 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     <div class="quickTopInner">
       <button class="main" onclick="startPractice()">🎤<br>연습</button>
       <button class="danger" onclick="stopPractice()">⏹<br>분석</button>
+      <button class="light" onclick="startRecordingPracticeOnly()">●<br>녹음</button>
+      <button class="light" onclick="stopRecordingPracticeOnly()">■<br>녹음끝</button>
       <button class="light" onclick="playLastRecording()">🎧<br>듣기</button>
       <button class="main" onclick="pickRandomQuestion()">🎲<br>문제</button>
     </div>
@@ -179,6 +191,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     <div class="timer" id="recordTimer">00:00</div>
     <div class="sub" id="recordStatus">대기 중 · 연습 시작은 음성인식/분석 전용입니다.</div>
     <audio id="audioPlayer" controls class="hidden"></audio>
+    <div class="grid2" id="recordButtonsV91"><button class="light" onclick="startRecordingPracticeOnly()">● 녹음만 시작</button><button class="light" onclick="stopRecordingPracticeOnly()">■ 녹음만 종료</button></div>
     <input id="recordFileName" placeholder="저장 파일 이름" oninput="saveRecordingSettings()" />
     <input id="recordFolderMemo" placeholder="저장 폴더 메모: 예 Download/OPIc" oninput="saveRecordingSettings()" />
     <button class="light hidden" id="downloadAudioBtn" onclick="downloadRecording()">녹음 파일 저장</button>
@@ -241,8 +254,15 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 
 <div class="actionDock">
   <div class="actionInner stack">
-    <div class="grid2"><button onclick="startPractice()">🎤 연습 시작</button><button class="light" onclick="stopPractice()">⏹ 종료/분석</button></div>
-    <button onclick="pickRandomQuestion()">↻ 랜덤 문제 뽑기</button>
+    <div class="grid3">
+      <button onclick="startPractice()">🎤 연습</button>
+      <button class="light" onclick="startRecordingPracticeOnly()">● 녹음</button>
+      <button class="light" onclick="stopRecordingPracticeOnly()">■ 종료</button>
+    </div>
+    <div class="grid2">
+      <button class="light" onclick="playLastRecording()">🎧 녹음 듣기</button>
+      <button onclick="pickRandomQuestion()">↻ 문제 뽑기</button>
+    </div>
     <div class="statusLine">빠른 조작</div>
   </div>
 </div>
@@ -323,7 +343,7 @@ init();
 </script>
 
 <script>
-/* v9.0 speech hotfix
+/* v9.1 speech hotfix
    Key change: create SpeechRecognition every run, start speech first,
    start recording only after recognition.onstart + 1000ms.
 */
@@ -429,7 +449,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v82CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 방식 적용.";
   v82Debug("초기화 완료");
 }
 
@@ -517,7 +537,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v9.0 speech hotfix
+/* v9.1 speech hotfix
    continuous=true + auto restart while practice is active.
    This fixes "only okay / first word recognized" on mobile Chrome.
 */
@@ -634,7 +654,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v83CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 연속 인식 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 연속 인식 방식 적용.";
   v83Debug("초기화 완료");
 }
 
@@ -732,7 +752,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v9.0 speech hotfix
+/* v9.1 speech hotfix
    Fix duplicated interim/final transcript accumulation.
    Keep one clean rolling transcript and append only new segments after auto-restart.
 */
@@ -876,7 +896,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v84CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 중복 제거 방식 적용.";
   v84Debug("초기화 완료");
 }
 
@@ -976,7 +996,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v9.0 speech hotfix
+/* v9.1 speech hotfix
    Main fix: do not append repeated interim chunks.
    Use latest full transcript for each recognition session,
    and merge only when a session truly ends/restarts.
@@ -1137,7 +1157,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v85CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 중복 제거 방식 적용.";
   v85Debug("초기화 완료");
 }
 
@@ -1237,7 +1257,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v9.0 speech-first mode
+/* v9.1 speech-first mode
    Android Chrome often cannot feed SpeechRecognition and MediaRecorder at the same time.
    So the main Practice button runs speech recognition only.
    Recording is available through separate "녹음만 시작/종료" buttons.
@@ -1397,7 +1417,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v86CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 음성인식/녹음 분리 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 음성인식/녹음 분리 방식.";
   v86Debug("초기화 완료");
 }
 
@@ -1502,7 +1522,7 @@ function stopRecordingPracticeOnly(){
 
 
 <script>
-/* v9.0 speech hotfix
+/* v9.1 speech hotfix
    Final-only mode:
    - Do not show/save interim result.
    - Save only isFinal transcript.
@@ -1648,7 +1668,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v87CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.0 최종 문장 전용 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v9.1 최종 문장 전용 방식.";
   v87Debug("초기화 완료");
 }
 
@@ -1738,7 +1758,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v9.0 UX helpers */
+/* v9.1 UX helpers */
 function toggleSettings(){
   const el = document.getElementById("settingsCard");
   if(!el) return;
@@ -1771,6 +1791,39 @@ const __v9_stopPractice = stopPractice;
 stopPractice = function(){
   __v9_stopPractice();
   scrollToAnalysis();
+}
+</script>
+
+
+<script>
+/* v9.1 recording visibility + fallback helpers */
+if (typeof startRecordingPracticeOnly !== "function") {
+  async function startRecordingPracticeOnly(){
+    if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+    if(recognition && recognizing){
+      try{ recognition.stop(); }catch(e){}
+    }
+    practiceStarted = false;
+    resetPracticeStatus();
+    recordStatus.innerText = "녹음만 시작 중...";
+    await startRecordingOnly();
+  }
+}
+if (typeof stopRecordingPracticeOnly !== "function") {
+  function stopRecordingPracticeOnly(){
+    stopRecordingOnly();
+  }
+}
+if (typeof playLastRecording !== "function") {
+  function playLastRecording(){
+    if(audioPlayer && audioPlayer.src){
+      audioPlayer.classList.remove("hidden");
+      audioPlayer.scrollIntoView({behavior:"smooth",block:"center"});
+      audioPlayer.play().catch(()=>{});
+    }else{
+      alert("재생할 녹음이 없습니다. 먼저 녹음만 시작/종료로 녹음하세요.");
+    }
+  }
 }
 </script>
 
