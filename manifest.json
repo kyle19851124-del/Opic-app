@@ -1,12 +1,12 @@
 {
-  "name": "OPIc 실전 암기툴",
-  "short_name": "OPIc암기",
-  "description": "OPIc 문제 랜덤 출제, 녹음, 시험모드, 암기상태 관리",
+  "name": "OPIc Coach",
+  "short_name": "OPIcCoach",
+  "description": "OPIc 암기, 녹음, 음성인식, 답변분석",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f5f8",
-  "theme_color": "#2563eb",
+  "background_color": "#f4efe7",
+  "theme_color": "#10a37f",
   "orientation": "portrait",
   "icons": [
     {
