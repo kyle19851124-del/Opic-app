@@ -11,8 +11,7 @@
 :root{
   --bg:#f7f7f8;--panel:#ffffff;--panel2:#f1f5f9;--text:#202123;--muted:#6b7280;--border:#e5e7eb;
   --primary:#10a37f;--primary2:#0e8f70;--danger:#dc2626;--warn:#d97706;--success:#16a34a;
-  --hard:#fff7ed;--done:#ecfdf5;--wrong:#fef2f2;--mark:#fff3a3;--em:#ffe4e6;
-  --shadow:0 2px 14px rgba(0,0,0,.08);
+  --hard:#fff7ed;--done:#ecfdf5;--wrong:#fef2f2;--mark:#fff3a3;--em:#ffe4e6;--shadow:0 2px 14px rgba(0,0,0,.08);
 }
 [data-theme="dark"]{
   --bg:#111827;--panel:#1f2937;--panel2:#273449;--text:#f9fafb;--muted:#cbd5e1;--border:#374151;
@@ -26,40 +25,34 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-.app{max-width:840px;margin:0 auto;min-height:100vh;padding-bottom:32px}
-.header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--border);padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:rgba(255,151,64,var(--blue-filter,0));z-index:9999;mix-blend-mode:multiply}
+.app{max-width:840px;margin:0 auto;min-height:100vh;padding-bottom:150px}
+.header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--border);padding:12px 14px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
 .headerRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
-.logo{width:32px;height:32px;border-radius:10px;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}.logo{width:32px;height:32px;border-radius:10px;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900}
 .summary{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;margin:12px 12px;padding:16px;box-shadow:var(--shadow)}
-.chatCard{border-radius:18px 18px 18px 6px}
-.card.hardBox{background:var(--hard);border-color:var(--warn)}
-.card.doneBox{background:var(--done);border-color:var(--success)}
+.chatCard{border-radius:18px 18px 18px 6px}.hardBox{background:var(--hard);border-color:var(--warn)}.doneBox{background:var(--done);border-color:var(--success)}
 .label{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px}
 select,input,textarea,button{width:100%;border-radius:12px;font-size:16px;padding:13px;margin-top:8px}
 select,input,textarea{border:1px solid var(--border);background:var(--panel);color:var(--text)}
-textarea{min-height:190px;line-height:1.55;display:none}
-button{border:0;background:var(--primary);color:white;font-weight:800}
-button.secondary{background:#4b5563}button.success{background:var(--success)}button.danger{background:var(--danger)}button.warn{background:var(--warn)}
-button.light{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+input[type=range]{padding:0;margin-top:8px;accent-color:var(--primary)}
+textarea{min-height:190px;line-height:1.55;display:none}button{border:0;background:var(--primary);color:white;font-weight:800}
+button.secondary{background:#4b5563}button.success{background:var(--success)}button.danger{background:var(--danger)}button.warn{background:var(--warn)}button.light{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-#meta{color:var(--primary);font-size:14px;font-weight:800;line-height:1.5;margin-bottom:8px}
-#question{font-size:21px;font-weight:800;line-height:1.55;white-space:pre-line}
-#answer{font-size:17px;line-height:1.7;white-space:pre-line;display:none}
-.badge{display:inline-block;padding:4px 9px;margin:2px 4px 7px 0;border-radius:999px;font-size:12px;font-weight:800}
-.badgeHard{background:#fb923c;color:white}.badgeDone{background:#22c55e;color:white}.badgeWrong{background:#ef4444;color:white}.badgeNormal{background:var(--panel2);color:var(--text)}
+#meta{color:var(--primary);font-size:14px;font-weight:800;line-height:1.5;margin-bottom:8px}#question{font-size:21px;font-weight:800;line-height:1.55;white-space:pre-line}#answer{font-size:17px;line-height:1.7;white-space:pre-line;display:none}
+.badge{display:inline-block;padding:4px 9px;margin:2px 4px 7px 0;border-radius:999px;font-size:12px;font-weight:800}.badgeHard{background:#fb923c;color:white}.badgeDone{background:#22c55e;color:white}.badgeWrong{background:#ef4444;color:white}.badgeNormal{background:var(--panel2);color:var(--text)}
 .star{font-size:27px;color:#c7c7c7;cursor:pointer;padding-right:3px;user-select:none}.star.on{color:#f59e0b}
-.timer{text-align:center;font-size:38px;font-weight:900;margin:6px 0;color:var(--text)}.sub{text-align:center;color:var(--muted);font-size:13px}
+.timer{text-align:center;font-size:40px;font-weight:900;margin:6px 0;color:var(--text)}.sub{text-align:center;color:var(--muted);font-size:13px}
 mark.keyword{background:var(--mark);padding:1px 3px;border-radius:4px}mark.emphasis{background:var(--em);padding:1px 3px;border-radius:4px;font-weight:800}
 audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size:13px;color:var(--muted);line-height:1.55}
-.metricGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
-.metric{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center}
-.metric .num{font-size:24px;font-weight:900}.metric .cap{font-size:12px;color:var(--muted);margin-top:3px}
+.metricGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.metric{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center}.metric .num{font-size:24px;font-weight:900}.metric .cap{font-size:12px;color:var(--muted);margin-top:3px}
 .progressOuter{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-top:8px}.progressInner{height:100%;background:var(--primary);width:0%}
 .compareList{font-size:14px;line-height:1.6}.ok{color:var(--success);font-weight:800}.miss{color:var(--danger);font-weight:800}
 #speechText{white-space:pre-line;line-height:1.6;background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:14px;min-height:72px}
 .pill{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--panel2);font-size:12px;font-weight:800;margin:2px}
+.actionDock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--border);box-shadow:0 -4px 18px rgba(0,0,0,.12);padding:10px 12px}
+.actionInner{max-width:840px;margin:0 auto}.actionDock button{margin-top:0}.stack{display:grid;gap:8px}.statusLine{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
 </style>
 </head>
 <body>
@@ -68,24 +61,22 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     <div class="headerRow">
       <div class="brand"><div class="logo">O</div><div>OPIc Coach</div></div>
       <select id="themeSelect" onchange="setTheme(this.value)" style="max-width:135px;margin:0;padding:8px;font-size:13px">
-        <option value="light">라이트</option>
-        <option value="dark">다크</option>
-        <option value="comfort">눈편한</option>
+        <option value="light">라이트</option><option value="dark">다크</option><option value="comfort">눈편한</option>
       </select>
     </div>
     <div class="summary">총 <span id="totalCount"></span>개 · 어려움 <span id="hardCount"></span> · 틀림 <span id="wrongCount"></span> · 암기완료 <span id="doneCount"></span></div>
   </div>
 
   <div class="card">
+    <div class="label">블루라이트 필터: <span id="blueFilterValue">0%</span></div>
+    <input type="range" id="blueFilterSlider" min="0" max="45" value="0" oninput="setBlueFilter(this.value)" />
+    <div class="small">추천: 낮 10~15%, 밤 25~35%. 화면 전체에 따뜻한 색 필터를 실시간 적용합니다.</div>
+  </div>
+
+  <div class="card">
     <div class="grid2">
-      <div>
-        <div class="label">학습 모드</div>
-        <select id="modeSelect" onchange="changeMode()"><option value="STUDY">일반 학습</option><option value="EXAM">시험모드</option></select>
-      </div>
-      <div>
-        <div class="label">시험 문제 수</div>
-        <input id="examCount" type="number" value="10" min="1" max="30"/>
-      </div>
+      <div><div class="label">학습 모드</div><select id="modeSelect" onchange="changeMode()"><option value="STUDY">일반 학습</option><option value="EXAM">시험모드</option></select></div>
+      <div><div class="label">시험 문제 수</div><input id="examCount" type="number" value="10" min="1" max="30"/></div>
     </div>
     <button id="examStartBtn" class="success hidden" onclick="startExam()">시험 시작</button>
   </div>
@@ -104,10 +95,10 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
   </div>
 
   <div class="card">
-    <div class="label">녹음 / 오픽모드</div>
+    <div class="label">통합 답변 연습</div>
     <div class="timer" id="recordTimer">00:00</div>
-    <div class="sub" id="recordStatus">녹음 대기 중</div>
-    <div class="grid2"><button class="success" onclick="startRecording()">녹음 시작</button><button class="danger" onclick="stopRecording()">녹음 종료</button></div>
+    <div class="sub" id="recordStatus">대기 중 · 녹음 시작 시 음성인식도 함께 시작됩니다.</div>
+    <div class="grid2"><button class="success" onclick="startPractice()">녹음+인식 시작</button><button class="danger" onclick="stopPractice()">종료+분석</button></div>
     <audio id="audioPlayer" controls class="hidden"></audio>
     <input id="recordFileName" placeholder="저장 파일 이름" oninput="saveRecordingSettings()" />
     <input id="recordFolderMemo" placeholder="저장 폴더 메모: 예 Download/OPIc" oninput="saveRecordingSettings()" />
@@ -115,15 +106,13 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
   </div>
 
   <div class="card">
-    <div class="label">음성 텍스트 전환 · 오픽모드</div>
-    <div class="grid2"><button class="success" onclick="startSpeech()">음성 인식 시작</button><button class="danger" onclick="stopSpeech()">음성 인식 종료/분석</button></div>
+    <div class="label">인식 결과</div>
     <div id="speechText">오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.</div>
-    <button class="light" onclick="analyzeSpeech()">답변 분석</button>
     <button class="light" onclick="clearSpeechText()">텍스트 지우기</button>
     <div class="small" id="speechSupportStatus"></div>
   </div>
 
-  <div class="card" id="analysisCard">
+  <div class="card">
     <div class="label">답변 분석</div>
     <div class="metricGrid">
       <div class="metric"><div class="num" id="mTime">00:00</div><div class="cap">발화시간</div></div>
@@ -132,7 +121,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
       <div class="metric"><div class="num" id="mJudge">대기</div><div class="cap">판정</div></div>
     </div>
     <div class="progressOuter"><div class="progressInner" id="coverageBar"></div></div>
-    <div class="compareList" id="compareResult" style="margin-top:10px">음성 인식 후 분석 버튼을 누르세요.</div>
+    <div class="compareList" id="compareResult" style="margin-top:10px">답변 종료 후 자동 분석됩니다.</div>
   </div>
 
   <div class="card">
@@ -140,20 +129,22 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     <div id="answer"></div><textarea id="answerEditor"></textarea>
   </div>
 
-  <button onclick="pickRandomQuestion()">랜덤 문제 뽑기</button>
-  <button class="secondary" onclick="toggleAnswer()">답변 보기 / 숨기기</button>
-  <div class="grid2"><button class="warn" onclick="toggleHard()">어려운 문제 선택/해제</button><button class="danger" onclick="toggleWrong()">틀린 문제 선택/해제</button></div>
-  <div class="grid3"><button class="success" onclick="markSuccess()">암기 성공</button><button class="danger" onclick="markFail()">암기 실패</button><button class="light" onclick="clearStars()">별 해제</button></div>
-  <div class="grid2"><button class="success" onclick="editAnswer()">답변 수정</button><button class="danger" onclick="saveAnswer()">수정 저장</button></div>
-
   <div id="examPanel" class="card hidden">
     <div class="label">시험 결과</div><div id="examStatus"></div>
     <div class="grid2"><button class="success" onclick="examSuccess()">이번 문제 성공</button><button class="danger" onclick="examFail()">이번 문제 실패</button></div>
     <button class="secondary" onclick="endExam()">시험 종료</button>
   </div>
 
-  <div class="card small">
-    눈편한 모드는 야간 장시간 학습용으로 추천합니다. 완전 다크보다 대비가 부드러워 피로가 덜합니다.
+  <div class="card small">버튼은 하단 도크에 정리했습니다. 주 학습 흐름은 문제 뽑기 → 녹음+인식 시작 → 종료+분석 → 성공/실패 기록입니다.</div>
+</div>
+
+<div class="actionDock">
+  <div class="actionInner stack">
+    <button onclick="pickRandomQuestion()">랜덤 문제 뽑기</button>
+    <div class="grid2"><button class="secondary" onclick="toggleAnswer()">답변 보기/숨기기</button><button class="warn" onclick="toggleHard()">어려움 토글</button></div>
+    <div class="grid3"><button class="success" onclick="markSuccess()">암기 성공</button><button class="danger" onclick="markFail()">암기 실패</button><button class="light" onclick="clearStars()">별 해제</button></div>
+    <div class="grid2"><button class="light" onclick="editAnswer()">답변 수정</button><button class="secondary" onclick="saveAnswer()">수정 저장</button></div>
+    <div class="statusLine">핵심 조작 버튼</div>
   </div>
 </div>
 
@@ -161,27 +152,29 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 const defaultItems=window.OPIC_DEFAULT_ITEMS||[];
 let progress=loadProgress(),opicItems=mergeDefaultWithProgress(defaultItems),currentItem=null;
 let recordTimerInterval=null,recordStartTime=null,lastDurationSec=0,mediaRecorder=null,audioChunks=[],recordedBlob=null;
-let recognition=null,recognizing=false,finalSpeechText="",interimSpeechText="";
+let recognition=null,recognizing=false,finalSpeechText="",interimSpeechText="",speechSupported=false;
 let exam={active:false,list:[],index:0,success:0,fail:0};
 
 function makeKey(item){return item.id||item.key||String(item.question||"").toLowerCase().trim().replace(/\s+/g," ")}
-function loadProgress(){try{return JSON.parse(localStorage.getItem("opicProgressV6")||localStorage.getItem("opicProgressV5")||localStorage.getItem("opicProgressV4")||"{}")}catch(e){return {}}}
-function saveProgress(){localStorage.setItem("opicProgressV6",JSON.stringify(progress));updateSummary()}
+function loadProgress(){try{return JSON.parse(localStorage.getItem("opicProgressV7")||localStorage.getItem("opicProgressV6")||localStorage.getItem("opicProgressV5")||"{}")}catch(e){return {}}}
+function saveProgress(){localStorage.setItem("opicProgressV7",JSON.stringify(progress));updateSummary()}
 function mergeDefaultWithProgress(defaults){return defaults.map(item=>{const k=makeKey(item),o=progress[k]||{};return {...item,isHard:!!o.isHard,isWrong:!!o.isWrong,stars:o.stars||0,answer:o.editedAnswer||item.answer,editedAnswer:o.editedAnswer||"",attempts:o.attempts||0,successCount:o.successCount||0,failCount:o.failCount||0,lastDurationSec:o.lastDurationSec||0,lastSpeechText:o.lastSpeechText||""}})}
 function syncCurrentToProgress(){if(!currentItem)return;progress[makeKey(currentItem)]={isHard:!!currentItem.isHard,isWrong:!!currentItem.isWrong,stars:currentItem.stars||0,editedAnswer:currentItem.editedAnswer||"",attempts:currentItem.attempts||0,successCount:currentItem.successCount||0,failCount:currentItem.failCount||0,lastDurationSec:currentItem.lastDurationSec||0,lastSpeechText:currentItem.lastSpeechText||""};saveProgress()}
-function init(){loadTheme();buildTopicFilter();loadRecordingSettings();updateSummary();renderStars(0);setupSpeechRecognition()}
+function init(){loadTheme();loadBlueFilter();buildTopicFilter();loadRecordingSettings();updateSummary();renderStars(0);setupSpeechRecognition()}
 function buildTopicFilter(){const f=document.getElementById("topicFilter");f.innerHTML='<option value="ALL">전체 토픽</option>';[...new Set(opicItems.map(i=>i.topic))].sort().forEach(t=>{const o=document.createElement("option");o.value=t;o.innerText=t;f.appendChild(o)})}
 function updateSummary(){totalCount.innerText=opicItems.length;hardCount.innerText=opicItems.filter(x=>x.isHard).length;wrongCount.innerText=opicItems.filter(x=>x.isWrong).length;doneCount.innerText=opicItems.filter(x=>(x.stars||0)>=3).length}
 function setTheme(t){document.documentElement.setAttribute("data-theme",t==="light"?"":t);localStorage.setItem("opicTheme",t);themeSelect.value=t}
 function loadTheme(){setTheme(localStorage.getItem("opicTheme")||"comfort")}
+function setBlueFilter(v){const val=Math.max(0,Math.min(45,parseInt(v||0)));document.body.style.setProperty("--blue-filter",val/100);blueFilterValue.innerText=val+"%";blueFilterSlider.value=val;localStorage.setItem("opicBlueFilter",val)}
+function loadBlueFilter(){setBlueFilter(localStorage.getItem("opicBlueFilter")||12)}
 function changeMode(){const m=modeSelect.value;examStartBtn.classList.toggle("hidden",m!=="EXAM");examPanel.classList.toggle("hidden",m!=="EXAM"||!exam.active)}
 function getFilteredItems(){const c=categoryFilter.value,t=topicFilter.value;let l=opicItems;if(c==="HARD")l=l.filter(i=>i.isHard);if(c==="WRONG")l=l.filter(i=>i.isWrong);if(c==="DONE")l=l.filter(i=>(i.stars||0)>=3);if(c==="NOT_DONE")l=l.filter(i=>(i.stars||0)<3);if(t!=="ALL")l=l.filter(i=>i.topic===t);return l}
 function pickRandomQuestion(){const l=getFilteredItems();if(!l.length)return alert("선택한 카테고리/토픽에 문제가 없습니다.");currentItem=l[Math.floor(Math.random()*l.length)];renderCurrentItem(false)}
-function renderCurrentItem(showAnswer){resetRecordingStatus();clearAnalysis(false);meta.innerText="["+currentItem.topic+"] "+currentItem.docName;question.innerHTML=highlightText(currentItem.question,currentItem.questionHighlights||[],"keyword");answer.innerHTML=highlightText(currentItem.answer,currentItem.answerEmphasis||[],"emphasis");answer.style.display=showAnswer?"block":"none";answerEditor.value=currentItem.answer;answerEditor.style.display="none";speechText.innerText=currentItem.lastSpeechText||"오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";setDefaultRecordingFileName();renderBadges();renderStars(currentItem.stars||0);renderBoxStatus()}
+function renderCurrentItem(showAnswer){resetPracticeStatus();clearAnalysis(false);meta.innerText="["+currentItem.topic+"] "+currentItem.docName;question.innerHTML=highlightText(currentItem.question,currentItem.questionHighlights||[],"keyword");answer.innerHTML=highlightText(currentItem.answer,currentItem.answerEmphasis||[],"emphasis");answer.style.display=showAnswer?"block":"none";answerEditor.value=currentItem.answer;answerEditor.style.display="none";speechText.innerText=currentItem.lastSpeechText||"오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";setDefaultRecordingFileName();renderBadges();renderStars(currentItem.stars||0);renderBoxStatus()}
 function highlightText(text,targets,cls){let safe=escapeHtml(text||"");targets.forEach(t=>{if(!t)return;safe=safe.replace(new RegExp("("+escapeRegExp(escapeHtml(t))+")","gi"),'<mark class="'+cls+'">$1</mark>')});return safe.replace(/\n/g,"<br>")}
 function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function escapeRegExp(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
-function renderBadges(){const b=[];if(currentItem.isHard)b.push('<span class="badge badgeHard">어려운 문제</span>');if(currentItem.isWrong)b.push('<span class="badge badgeWrong">틀린 문제</span>');if((currentItem.stars||0)>=3)b.push('<span class="badge badgeDone">암기완료</span>');if(!currentItem.isHard&&!currentItem.isWrong&&(currentItem.stars||0)<3)b.push('<span class="badge badgeNormal">학습중</span>');if(currentItem.lastDurationSec)b.push('<span class="badge badgeNormal">최근 녹음 '+formatTime(currentItem.lastDurationSec)+'</span>');badges.innerHTML=b.join("")}
+function renderBadges(){const b=[];if(currentItem.isHard)b.push('<span class="badge badgeHard">어려운 문제</span>');if(currentItem.isWrong)b.push('<span class="badge badgeWrong">틀린 문제</span>');if((currentItem.stars||0)>=3)b.push('<span class="badge badgeDone">암기완료</span>');if(!currentItem.isHard&&!currentItem.isWrong&&(currentItem.stars||0)<3)b.push('<span class="badge badgeNormal">학습중</span>');if(currentItem.lastDurationSec)b.push('<span class="badge badgeNormal">최근 '+formatTime(currentItem.lastDurationSec)+'</span>');badges.innerHTML=b.join("")}
 function renderBoxStatus(){questionBox.classList.remove("hardBox","doneBox");if((currentItem.stars||0)>=3)questionBox.classList.add("doneBox");else if(currentItem.isHard||currentItem.isWrong)questionBox.classList.add("hardBox")}
 function toggleAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display==="block")return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");answer.style.display=answer.style.display==="none"?"block":"none"}
 function toggleHard(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.isHard=!currentItem.isHard;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
@@ -196,23 +189,25 @@ function saveAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세�
 function formatTime(sec){sec=Math.max(0,sec||0);return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
 function startRecordTimer(){recordStartTime=Date.now();lastDurationSec=0;recordTimer.innerText="00:00";recordTimerInterval=setInterval(()=>{lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordTimer.innerText=formatTime(lastDurationSec)},250)}
 function stopRecordTimer(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;if(recordStartTime){lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordStartTime=null;recordTimer.innerText=formatTime(lastDurationSec);if(currentItem){currentItem.lastDurationSec=lastDurationSec;syncCurrentToProgress();renderBadges()}}}
-function resetRecordingStatus(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;recordStartTime=null;lastDurationSec=0;recordedBlob=null;audioChunks=[];audioPlayer.removeAttribute("src");audioPlayer.classList.add("hidden");downloadAudioBtn.classList.add("hidden");recordTimer.innerText="00:00";recordStatus.innerText="녹음 대기 중"}
-async function startRecording(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return alert("녹음 미지원 브라우저입니다.");try{resetRecordingStatus();const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);mediaRecorder.onstop=()=>{stopRecordTimer();recordedBlob=new Blob(audioChunks,{type:"audio/webm"});audioPlayer.src=URL.createObjectURL(recordedBlob);audioPlayer.classList.remove("hidden");downloadAudioBtn.classList.remove("hidden");recordStatus.innerText="녹음 완료 · "+formatTime(lastDurationSec);stream.getTracks().forEach(t=>t.stop())};mediaRecorder.start();startRecordTimer();recordStatus.innerText="녹음 중..."}catch(e){alert("마이크 권한이 필요합니다.")}}
-function stopRecording(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop()}
+function resetPracticeStatus(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;recordStartTime=null;lastDurationSec=0;recordedBlob=null;audioChunks=[];audioPlayer.removeAttribute("src");audioPlayer.classList.add("hidden");downloadAudioBtn.classList.add("hidden");recordTimer.innerText="00:00";recordStatus.innerText="대기 중 · 녹음 시작 시 음성인식도 함께 시작됩니다.";finalSpeechText="";interimSpeechText=""}
+async function startPractice(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");resetPracticeStatus();clearAnalysis(false);await startRecordingOnly();startSpeechOnly()}
+function stopPractice(){stopRecordingOnly();stopSpeechOnly(true)}
+async function startRecordingOnly(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){recordStatus.innerText="녹음 미지원";return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);mediaRecorder.onstop=()=>{stopRecordTimer();recordedBlob=new Blob(audioChunks,{type:"audio/webm"});audioPlayer.src=URL.createObjectURL(recordedBlob);audioPlayer.classList.remove("hidden");downloadAudioBtn.classList.remove("hidden");recordStatus.innerText="녹음 완료 · "+formatTime(lastDurationSec);stream.getTracks().forEach(t=>t.stop());setTimeout(analyzeSpeech,200)};mediaRecorder.start();startRecordTimer();recordStatus.innerText=speechSupported?"녹음+음성인식 중...":"녹음 중... 음성인식 미지원 환경"}catch(e){alert("마이크 권한이 필요합니다.")}}
+function stopRecordingOnly(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();else stopRecordTimer()}
 function cleanFileName(n){return String(n||"opic_recording").replace(/[\\/:*?"<>|]/g,"_").trim()||"opic_recording"}
 function setDefaultRecordingFileName(){if(!currentItem)return;const date=new Date().toISOString().slice(0,10);recordFileName.value=cleanFileName(makeKey(currentItem)+"_"+date)}
 function saveRecordingSettings(){localStorage.setItem("opicRecordFolderMemo",recordFolderMemo.value||"")}
 function loadRecordingSettings(){recordFolderMemo.value=localStorage.getItem("opicRecordFolderMemo")||""}
 function downloadRecording(){if(!recordedBlob)return alert("저장할 녹음 파일이 없습니다.");const fn=cleanFileName(recordFileName.value)+".webm";localStorage.setItem("opicLastRecordFileName",fn);saveRecordingSettings();const url=URL.createObjectURL(recordedBlob),a=document.createElement("a");a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url)}
-function setupSpeechRecognition(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){speechSupportStatus.innerText="음성 인식 미지원 환경입니다. Chrome 일반 탭에서 시도하세요.";return}speechSupportStatus.innerText="음성 인식 API 감지됨. 오픽모드는 종료 후 최종 문장만 표시합니다.";recognition=new SR();recognition.lang="en-US";recognition.continuous=true;recognition.interimResults=true;recognition.onstart=()=>{recognizing=true;finalSpeechText="";interimSpeechText="";speechText.innerText="인식 중입니다. 종료 후 최종 문장을 표시합니다."};recognition.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const txt=e.results[i][0].transcript;if(e.results[i].isFinal)finalSpeechText+=txt.trim()+" ";else interimSpeechText=txt}};recognition.onerror=e=>{recognizing=false;speechText.innerText="음성 인식 오류: "+(e.error||"unknown")};recognition.onend=()=>{recognizing=false;const out=(finalSpeechText||interimSpeechText||"").trim();speechText.innerText=out||"인식된 문장이 없습니다.";if(currentItem){currentItem.lastSpeechText=out;syncCurrentToProgress()}analyzeSpeech()}}
-function startSpeech(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(!recognition)return alert("음성 인식 미지원 환경입니다.");if(recognizing)return;try{recognition.start()}catch(e){alert("음성 인식을 시작하지 못했습니다.")}}
-function stopSpeech(){if(recognition&&recognizing)recognition.stop()}
+function setupSpeechRecognition(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){speechSupportStatus.innerText="음성 인식 미지원 환경입니다. 녹음은 가능합니다.";speechSupported=false;return}speechSupported=true;speechSupportStatus.innerText="음성 인식 API 감지됨. 녹음 시작 시 자동 실행됩니다.";recognition=new SR();recognition.lang="en-US";recognition.continuous=true;recognition.interimResults=true;recognition.onstart=()=>{recognizing=true;finalSpeechText="";interimSpeechText="";speechText.innerText="인식 중입니다. 종료 후 최종 문장을 표시합니다."};recognition.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const txt=e.results[i][0].transcript;if(e.results[i].isFinal)finalSpeechText+=txt.trim()+" ";else interimSpeechText=txt}};recognition.onerror=e=>{recognizing=false;speechText.innerText="음성 인식 오류: "+(e.error||"unknown")};recognition.onend=()=>{recognizing=false;const out=(finalSpeechText||interimSpeechText||"").trim();speechText.innerText=out||"인식된 문장이 없습니다.";if(currentItem){currentItem.lastSpeechText=out;syncCurrentToProgress()}analyzeSpeech()}}
+function startSpeechOnly(){if(!recognition)return;if(recognizing)return;try{recognition.start()}catch(e){}}
+function stopSpeechOnly(doAnalyze){if(recognition&&recognizing)recognition.stop();recognizing=false;if(doAnalyze)setTimeout(analyzeSpeech,400)}
 function clearSpeechText(){finalSpeechText="";interimSpeechText="";speechText.innerText="오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";if(currentItem){currentItem.lastSpeechText="";syncCurrentToProgress()}clearAnalysis(false)}
 function normalize(t){return String(t||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim()}
 function getKeywords(answerText){const stop=new Set("the a an and or but so because to of in on at for with my i it is are was were be been this that there as about from by do did does have has had you know actually okay let me tell very really quite also then after before".split(" "));const words=normalize(answerText).split(" ").filter(w=>w.length>3&&!stop.has(w));const freq={};words.forEach(w=>freq[w]=(freq[w]||0)+1);return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12).map(x=>x[0])}
-function analyzeSpeech(){if(!currentItem)return;const spoken=normalize(speechText.innerText);const words=spoken?spoken.split(" ").filter(Boolean):[];const keys=getKeywords(currentItem.answer);let hit=0;let html="";keys.forEach(k=>{if(spoken.includes(k)){hit++;html+='<span class="ok">✓ '+k+'</span><br>'}else html+='<span class="miss">✗ '+k+'</span><br>'});const cov=keys.length?Math.round(hit/keys.length*100):0;mTime.innerText=formatTime(lastDurationSec||currentItem.lastDurationSec||0);mWords.innerText=words.length;mCoverage.innerText=cov+"%";coverageBar.style.width=cov+"%";mJudge.innerText=judgeAnswer(lastDurationSec||currentItem.lastDurationSec||0,words.length,cov);compareResult.innerHTML=html||"분석할 핵심어가 부족합니다."}
+function analyzeSpeech(){if(!currentItem)return;const spoken=normalize(speechText.innerText);const words=spoken?spoken.split(" ").filter(Boolean):[];const keys=getKeywords(currentItem.answer);let hit=0,html="";keys.forEach(k=>{if(spoken.includes(k)){hit++;html+='<span class="ok">✓ '+k+'</span><br>'}else html+='<span class="miss">✗ '+k+'</span><br>'});const cov=keys.length?Math.round(hit/keys.length*100):0;mTime.innerText=formatTime(lastDurationSec||currentItem.lastDurationSec||0);mWords.innerText=words.length;mCoverage.innerText=cov+"%";coverageBar.style.width=cov+"%";mJudge.innerText=judgeAnswer(lastDurationSec||currentItem.lastDurationSec||0,words.length,cov);compareResult.innerHTML=html||"분석할 핵심어가 부족합니다."}
 function judgeAnswer(sec,words,cov){if(cov>=75&&words>=70)return"IH권";if(cov>=55&&words>=45)return"양호";if(words<25)return"짧음";return"보완"}
-function clearAnalysis(reset=true){mTime.innerText="00:00";mWords.innerText="0";mCoverage.innerText="0%";mJudge.innerText="대기";coverageBar.style.width="0%";compareResult.innerText=reset?"음성 인식 후 분석 버튼을 누르세요.":"새 문제 대기 중입니다."}
+function clearAnalysis(reset=true){mTime.innerText="00:00";mWords.innerText="0";mCoverage.innerText="0%";mJudge.innerText="대기";coverageBar.style.width="0%";compareResult.innerText=reset?"답변 종료 후 자동 분석됩니다.":"새 문제 대기 중입니다."}
 function startExam(){const count=Math.max(1,Math.min(30,parseInt(examCount.value||"10"))),pool=getFilteredItems();if(!pool.length)return alert("시험 문제가 없습니다.");exam.list=shuffle([...pool]).slice(0,Math.min(count,pool.length));exam.index=0;exam.success=0;exam.fail=0;exam.active=true;examPanel.classList.remove("hidden");showExamQuestion()}
 function showExamQuestion(){if(!exam.active||exam.index>=exam.list.length)return endExam();currentItem=exam.list[exam.index];renderCurrentItem(false);updateExamStatus()}
 function updateExamStatus(){examStatus.innerHTML='<span class="pill">진행 '+(exam.index+1)+" / "+exam.list.length+'</span><span class="pill">성공 '+exam.success+'</span><span class="pill">실패 '+exam.fail+"</span>"}
@@ -220,7 +215,7 @@ function examSuccess(){if(!exam.active)return;markSuccess();exam.success++;exam.
 function examFail(){if(!exam.active)return;markFail();exam.fail++;exam.index++;showExamQuestion()}
 function endExam(){if(!exam.active)return;const total=exam.success+exam.fail,rate=total?Math.round(exam.success/total*100):0;examStatus.innerHTML="<b>시험 종료</b><br>총 "+total+"문제 / 성공 "+exam.success+" / 실패 "+exam.fail+"<br>성공률 "+rate+"%";exam.active=false}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function resetScreen(){currentItem=null;resetRecordingStatus();clearAnalysis(false);meta.innerText="";badges.innerHTML="";question.innerText="아래 버튼을 눌러 문제를 뽑으세요.";answer.innerText="";answer.style.display="none";answerEditor.style.display="none";answerEditor.value="";questionBox.classList.remove("hardBox","doneBox");speechText.innerText="오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";renderStars(0)}
+function resetScreen(){currentItem=null;resetPracticeStatus();clearAnalysis(false);meta.innerText="";badges.innerHTML="";question.innerText="아래 버튼을 눌러 문제를 뽑으세요.";answer.innerText="";answer.style.display="none";answerEditor.style.display="none";answerEditor.value="";questionBox.classList.remove("hardBox","doneBox");speechText.innerText="오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";renderStars(0)}
 if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
 init();
 </script>
