@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>OPIc Coach</title>
 <link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#10a37f" />
+<meta name="theme-color" content="#4F7A67" />
 <script src="data.js"></script>
 <style>
 :root{
   --bg:#f7f7f8;--panel:#ffffff;--panel2:#f1f5f9;--text:#202123;--muted:#6b7280;--border:#e5e7eb;
-  --primary:#10a37f;--primary2:#0e8f70;--danger:#dc2626;--warn:#d97706;--success:#16a34a;
+  --primary:#4F7A67;--primary2:#446B5A;--danger:#A06A6A;--warn:#9A8768;--success:#6B8F71;
   --hard:#fff7ed;--done:#ecfdf5;--wrong:#fef2f2;--mark:#fff3a3;--em:#ffe4e6;--shadow:0 2px 14px rgba(0,0,0,.08);
 }
 [data-theme="dark"]{
   --bg:#111827;--panel:#1f2937;--panel2:#273449;--text:#f9fafb;--muted:#cbd5e1;--border:#374151;
-  --primary:#10a37f;--primary2:#14b88f;--danger:#ef4444;--warn:#f59e0b;--success:#22c55e;
+  --primary:#4F7A67;--primary2:#14b88f;--danger:#ef4444;--warn:#f59e0b;--success:#22c55e;
   --hard:#3b2a1b;--done:#163322;--wrong:#3b1d1d;--mark:#665c16;--em:#5c2631;--shadow:0 2px 14px rgba(0,0,0,.35);
 }
 [data-theme="comfort"]{
   --bg:#f4efe7;--panel:#fffaf1;--panel2:#efe6d7;--text:#2f2a24;--muted:#766b5e;--border:#e2d4c1;
-  --primary:#2f7d68;--primary2:#266a58;--danger:#a33a3a;--warn:#a96b22;--success:#3c7a4c;
+  --primary:#4F7A67;--primary2:#446B5A;--danger:#A06A6A;--warn:#9A8768;--success:#6B8F71;
   --hard:#fff1df;--done:#edf7e9;--wrong:#faeaea;--mark:#f4e7a1;--em:#f2d4d4;
 }
 *{box-sizing:border-box}
@@ -41,7 +41,7 @@ textarea{min-height:190px;line-height:1.55;display:none}button{border:0;backgrou
 button.secondary{background:#4b5563}button.success{background:var(--success)}button.danger{background:var(--danger)}button.warn{background:var(--warn)}button.light{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 #meta{color:var(--primary);font-size:14px;font-weight:800;line-height:1.5;margin-bottom:8px}#question{font-size:21px;font-weight:800;line-height:1.55;white-space:pre-line}#answer{font-size:17px;line-height:1.7;white-space:pre-line;display:none}
-.badge{display:inline-block;padding:4px 9px;margin:2px 4px 7px 0;border-radius:999px;font-size:12px;font-weight:800}.badgeHard{background:#fb923c;color:white}.badgeDone{background:#22c55e;color:white}.badgeWrong{background:#ef4444;color:white}.badgeNormal{background:var(--panel2);color:var(--text)}
+.badge{display:inline-block;padding:4px 9px;margin:2px 4px 7px 0;border-radius:999px;font-size:12px;font-weight:800}.badgeHard{background:#9A8768;color:white}.badgeDone{background:#6B8F71;color:white}.badgeWrong{background:#A06A6A;color:white}.badgeNormal{background:var(--panel2);color:var(--text)}
 .star{font-size:27px;color:#c7c7c7;cursor:pointer;padding-right:3px;user-select:none}.star.on{color:#f59e0b}
 .timer{text-align:center;font-size:40px;font-weight:900;margin:6px 0;color:var(--text)}.sub{text-align:center;color:var(--muted);font-size:13px}
 mark.keyword{background:var(--mark);padding:1px 3px;border-radius:4px}mark.emphasis{background:var(--em);padding:1px 3px;border-radius:4px;font-weight:800}
@@ -51,8 +51,8 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 .compareList{font-size:14px;line-height:1.6}.ok{color:var(--success);font-weight:800}.miss{color:var(--danger);font-weight:800}
 #speechText{white-space:pre-line;line-height:1.6;background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:14px;min-height:72px}
 .pill{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--panel2);font-size:12px;font-weight:800;margin:2px}
-.actionDock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--border);box-shadow:0 -4px 18px rgba(0,0,0,.12);padding:10px 12px}
-.actionInner{max-width:840px;margin:0 auto}.actionDock button{margin-top:0}.stack{display:grid;gap:8px}.statusLine{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
+.actionDock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--border);box-shadow:0 -4px 18px rgba(0,0,0,.10);padding:10px 12px}
+.actionInner{max-width:840px;margin:0 auto}.actionDock button{margin-top:0;height:48px;font-size:15px;border-radius:14px;background:var(--primary);color:#fff}.actionDock button.secondary,.actionDock button.warn,.actionDock button.success{background:#7A8075;color:#fff}.actionDock button.danger{background:var(--danger);color:#fff}.actionDock button.light{background:var(--panel2);color:var(--text);border:1px solid var(--border)}.stack{display:grid;gap:8px}.statusLine{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
 </style>
 </head>
 <body>
@@ -97,8 +97,8 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
   <div class="card">
     <div class="label">통합 답변 연습</div>
     <div class="timer" id="recordTimer">00:00</div>
-    <div class="sub" id="recordStatus">대기 중 · 녹음 시작 시 음성인식도 함께 시작됩니다.</div>
-    <div class="grid2"><button class="success" onclick="startPractice()">녹음+인식 시작</button><button class="danger" onclick="stopPractice()">종료+분석</button></div>
+    <div class="sub" id="recordStatus">대기 중 · 음성인식 먼저 시작 후 녹음을 시작합니다.</div>
+    <div class="grid2"><button class="success" onclick="startPractice()">연습 시작</button><button class="danger" onclick="stopPractice()">종료/분석</button></div>
     <audio id="audioPlayer" controls class="hidden"></audio>
     <input id="recordFileName" placeholder="저장 파일 이름" oninput="saveRecordingSettings()" />
     <input id="recordFolderMemo" placeholder="저장 폴더 메모: 예 Download/OPIc" oninput="saveRecordingSettings()" />
@@ -108,7 +108,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
   <div class="card">
     <div class="label">인식 결과</div>
     <div id="speechText">오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.</div>
-    <button class="light" onclick="clearSpeechText()">텍스트 지우기</button>
+    <div class="grid2"><button class="light" onclick="retrySpeechOnly()">인식만 재시도</button><button class="light" onclick="clearSpeechText()">텍스트 지우기</button></div>
     <div class="small" id="speechSupportStatus"></div>
   </div>
 
@@ -135,16 +135,16 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     <button class="secondary" onclick="endExam()">시험 종료</button>
   </div>
 
-  <div class="card small">버튼은 하단 도크에 정리했습니다. 주 학습 흐름은 문제 뽑기 → 녹음+인식 시작 → 종료+분석 → 성공/실패 기록입니다.</div>
+  <div class="card small">버튼은 하단 도크에 정리했습니다. 주 학습 흐름은 문제 뽑기 → 연습 시작 → 종료/분석 → 성공/실패 기록입니다.</div>
 </div>
 
 <div class="actionDock">
   <div class="actionInner stack">
     <button onclick="pickRandomQuestion()">랜덤 문제 뽑기</button>
-    <div class="grid2"><button class="secondary" onclick="toggleAnswer()">답변 보기/숨기기</button><button class="warn" onclick="toggleHard()">어려움 토글</button></div>
-    <div class="grid3"><button class="success" onclick="markSuccess()">암기 성공</button><button class="danger" onclick="markFail()">암기 실패</button><button class="light" onclick="clearStars()">별 해제</button></div>
-    <div class="grid2"><button class="light" onclick="editAnswer()">답변 수정</button><button class="secondary" onclick="saveAnswer()">수정 저장</button></div>
-    <div class="statusLine">핵심 조작 버튼</div>
+    <div class="grid2"><button class="secondary" onclick="toggleAnswer()">답변</button><button class="warn" onclick="toggleHard()">어려움</button></div>
+    <div class="grid3"><button class="success" onclick="markSuccess()">성공</button><button class="danger" onclick="markFail()">실패</button><button class="light" onclick="clearStars()">별 해제</button></div>
+    <div class="grid2"><button class="light" onclick="editAnswer()">수정</button><button class="secondary" onclick="saveAnswer()">저장</button></div>
+    <div class="statusLine">학습 조작</div>
   </div>
 </div>
 
@@ -176,7 +176,7 @@ function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll("<","
 function escapeRegExp(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 function renderBadges(){const b=[];if(currentItem.isHard)b.push('<span class="badge badgeHard">어려운 문제</span>');if(currentItem.isWrong)b.push('<span class="badge badgeWrong">틀린 문제</span>');if((currentItem.stars||0)>=3)b.push('<span class="badge badgeDone">암기완료</span>');if(!currentItem.isHard&&!currentItem.isWrong&&(currentItem.stars||0)<3)b.push('<span class="badge badgeNormal">학습중</span>');if(currentItem.lastDurationSec)b.push('<span class="badge badgeNormal">최근 '+formatTime(currentItem.lastDurationSec)+'</span>');badges.innerHTML=b.join("")}
 function renderBoxStatus(){questionBox.classList.remove("hardBox","doneBox");if((currentItem.stars||0)>=3)questionBox.classList.add("doneBox");else if(currentItem.isHard||currentItem.isWrong)questionBox.classList.add("hardBox")}
-function toggleAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display==="block")return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");answer.style.display=answer.style.display==="none"?"block":"none"}
+function toggleAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display==="block")return alert("수정 중에는 답변를 사용할 수 없습니다.");answer.style.display=answer.style.display==="none"?"block":"none"}
 function toggleHard(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.isHard=!currentItem.isHard;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
 function toggleWrong(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.isWrong=!currentItem.isWrong;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
 function setStars(c){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.stars=c;if(c>=3)currentItem.isWrong=false;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
@@ -185,13 +185,28 @@ function renderStars(c){document.querySelectorAll(".star").forEach((s,i)=>i<c?s.
 function markSuccess(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.attempts=(currentItem.attempts||0)+1;currentItem.successCount=(currentItem.successCount||0)+1;currentItem.stars=Math.min(3,(currentItem.stars||0)+1);if(currentItem.stars>=3)currentItem.isWrong=false;currentItem.lastDurationSec=lastDurationSec||currentItem.lastDurationSec||0;syncCurrentToProgress();renderCurrentItem(true)}
 function markFail(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.attempts=(currentItem.attempts||0)+1;currentItem.failCount=(currentItem.failCount||0)+1;currentItem.isWrong=true;currentItem.isHard=true;currentItem.stars=Math.max(0,(currentItem.stars||0)-1);currentItem.lastDurationSec=lastDurationSec||currentItem.lastDurationSec||0;syncCurrentToProgress();renderCurrentItem(true)}
 function editAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");answer.style.display="none";answerEditor.style.display="block"}
-function saveAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display!=="block")return alert("먼저 답변 수정을 누르세요.");currentItem.answer=answerEditor.value;currentItem.editedAnswer=answerEditor.value;syncCurrentToProgress();renderCurrentItem(true);alert("답변 저장 완료")}
+function saveAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display!=="block")return alert("먼저 수정을 누르세요.");currentItem.answer=answerEditor.value;currentItem.editedAnswer=answerEditor.value;syncCurrentToProgress();renderCurrentItem(true);alert("답변 저장 완료")}
 function formatTime(sec){sec=Math.max(0,sec||0);return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
 function startRecordTimer(){recordStartTime=Date.now();lastDurationSec=0;recordTimer.innerText="00:00";recordTimerInterval=setInterval(()=>{lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordTimer.innerText=formatTime(lastDurationSec)},250)}
 function stopRecordTimer(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;if(recordStartTime){lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordStartTime=null;recordTimer.innerText=formatTime(lastDurationSec);if(currentItem){currentItem.lastDurationSec=lastDurationSec;syncCurrentToProgress();renderBadges()}}}
-function resetPracticeStatus(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;recordStartTime=null;lastDurationSec=0;recordedBlob=null;audioChunks=[];audioPlayer.removeAttribute("src");audioPlayer.classList.add("hidden");downloadAudioBtn.classList.add("hidden");recordTimer.innerText="00:00";recordStatus.innerText="대기 중 · 녹음 시작 시 음성인식도 함께 시작됩니다.";finalSpeechText="";interimSpeechText=""}
-async function startPractice(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");resetPracticeStatus();clearAnalysis(false);await startRecordingOnly();startSpeechOnly()}
-function stopPractice(){stopRecordingOnly();stopSpeechOnly(true)}
+function resetPracticeStatus(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;recordStartTime=null;lastDurationSec=0;recordedBlob=null;audioChunks=[];audioPlayer.removeAttribute("src");audioPlayer.classList.add("hidden");downloadAudioBtn.classList.add("hidden");recordTimer.innerText="00:00";recordStatus.innerText="대기 중 · 음성인식 먼저 시작 후 녹음을 시작합니다.";finalSpeechText="";interimSpeechText=""}
+async function startPractice(){
+  if(!currentItem)return alert("먼저 문제를 뽑으세요.");
+  resetPracticeStatus();
+  clearAnalysis(false);
+  if(speechSupported){
+    recordStatus.innerText="음성인식 준비 중...";
+    startSpeechOnly();
+    setTimeout(async()=>{ await startRecordingOnly(); }, 700);
+  }else{
+    recordStatus.innerText="음성인식 미지원 · 녹음만 시작합니다.";
+    await startRecordingOnly();
+  }
+}
+function stopPractice(){
+  stopRecordingOnly();
+  setTimeout(()=>stopSpeechOnly(true), 250);
+}
 async function startRecordingOnly(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){recordStatus.innerText="녹음 미지원";return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);mediaRecorder.onstop=()=>{stopRecordTimer();recordedBlob=new Blob(audioChunks,{type:"audio/webm"});audioPlayer.src=URL.createObjectURL(recordedBlob);audioPlayer.classList.remove("hidden");downloadAudioBtn.classList.remove("hidden");recordStatus.innerText="녹음 완료 · "+formatTime(lastDurationSec);stream.getTracks().forEach(t=>t.stop());setTimeout(analyzeSpeech,200)};mediaRecorder.start();startRecordTimer();recordStatus.innerText=speechSupported?"녹음+음성인식 중...":"녹음 중... 음성인식 미지원 환경"}catch(e){alert("마이크 권한이 필요합니다.")}}
 function stopRecordingOnly(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();else stopRecordTimer()}
 function cleanFileName(n){return String(n||"opic_recording").replace(/[\\/:*?"<>|]/g,"_").trim()||"opic_recording"}
@@ -199,9 +214,68 @@ function setDefaultRecordingFileName(){if(!currentItem)return;const date=new Dat
 function saveRecordingSettings(){localStorage.setItem("opicRecordFolderMemo",recordFolderMemo.value||"")}
 function loadRecordingSettings(){recordFolderMemo.value=localStorage.getItem("opicRecordFolderMemo")||""}
 function downloadRecording(){if(!recordedBlob)return alert("저장할 녹음 파일이 없습니다.");const fn=cleanFileName(recordFileName.value)+".webm";localStorage.setItem("opicLastRecordFileName",fn);saveRecordingSettings();const url=URL.createObjectURL(recordedBlob),a=document.createElement("a");a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url)}
-function setupSpeechRecognition(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){speechSupportStatus.innerText="음성 인식 미지원 환경입니다. 녹음은 가능합니다.";speechSupported=false;return}speechSupported=true;speechSupportStatus.innerText="음성 인식 API 감지됨. 녹음 시작 시 자동 실행됩니다.";recognition=new SR();recognition.lang="en-US";recognition.continuous=true;recognition.interimResults=true;recognition.onstart=()=>{recognizing=true;finalSpeechText="";interimSpeechText="";speechText.innerText="인식 중입니다. 종료 후 최종 문장을 표시합니다."};recognition.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const txt=e.results[i][0].transcript;if(e.results[i].isFinal)finalSpeechText+=txt.trim()+" ";else interimSpeechText=txt}};recognition.onerror=e=>{recognizing=false;speechText.innerText="음성 인식 오류: "+(e.error||"unknown")};recognition.onend=()=>{recognizing=false;const out=(finalSpeechText||interimSpeechText||"").trim();speechText.innerText=out||"인식된 문장이 없습니다.";if(currentItem){currentItem.lastSpeechText=out;syncCurrentToProgress()}analyzeSpeech()}}
-function startSpeechOnly(){if(!recognition)return;if(recognizing)return;try{recognition.start()}catch(e){}}
+function setupSpeechRecognition(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    speechSupportStatus.innerText="음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    speechSupported=false;
+    return;
+  }
+  speechSupported=true;
+  speechSupportStatus.innerText="음성 인식 API 감지됨. 통합 연습은 음성인식을 먼저 켠 뒤 녹음을 시작합니다.";
+  recognition=new SR();
+  recognition.lang="en-US";
+  recognition.continuous=true;
+  recognition.interimResults=true;
+  recognition.maxAlternatives=1;
+  recognition.onstart=()=>{
+    recognizing=true;
+    finalSpeechText="";
+    interimSpeechText="";
+    speechText.innerText="인식 중입니다. 종료 후 최종 문장을 표시합니다.";
+    recordStatus.innerText="음성인식 활성화 · 녹음 준비 중...";
+  };
+  recognition.onresult=e=>{
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const txt=e.results[i][0].transcript;
+      if(e.results[i].isFinal)finalSpeechText+=txt.trim()+" ";
+      else interimSpeechText=txt.trim();
+    }
+  };
+  recognition.onerror=e=>{
+    recognizing=false;
+    const msg=e.error||"unknown";
+    speechText.innerText="음성 인식 오류: "+msg;
+    speechSupportStatus.innerText="음성 인식 오류: "+msg+" · 녹음은 계속 사용할 수 있습니다.";
+  };
+  recognition.onend=()=>{
+    recognizing=false;
+    const out=(finalSpeechText||interimSpeechText||"").trim();
+    if(out){
+      speechText.innerText=out;
+      if(currentItem){currentItem.lastSpeechText=out;syncCurrentToProgress();}
+      analyzeSpeech();
+    }else{
+      speechText.innerText="인식된 문장이 없습니다. '인식만 재시도'로 같은 답변을 짧게 다시 말해보세요.";
+      analyzeSpeech();
+    }
+  };
+}
+function startSpeechOnly(){
+  if(!recognition)return;
+  if(recognizing)return;
+  try{recognition.start()}
+  catch(e){speechSupportStatus.innerText="음성 인식 시작 실패 · 잠시 후 다시 시도하세요."}
+}
 function stopSpeechOnly(doAnalyze){if(recognition&&recognizing)recognition.stop();recognizing=false;if(doAnalyze)setTimeout(analyzeSpeech,400)}
+function retrySpeechOnly(){
+  if(!currentItem)return alert("먼저 문제를 뽑으세요.");
+  if(!speechSupported||!recognition)return alert("이 환경에서는 음성 인식을 지원하지 않습니다.");
+  finalSpeechText="";
+  interimSpeechText="";
+  speechText.innerText="인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  startSpeechOnly();
+}
 function clearSpeechText(){finalSpeechText="";interimSpeechText="";speechText.innerText="오픽모드는 말하는 중간 과정은 숨기고, 종료 후 최종 문장만 표시합니다.";if(currentItem){currentItem.lastSpeechText="";syncCurrentToProgress()}clearAnalysis(false)}
 function normalize(t){return String(t||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim()}
 function getKeywords(answerText){const stop=new Set("the a an and or but so because to of in on at for with my i it is are was were be been this that there as about from by do did does have has had you know actually okay let me tell very really quite also then after before".split(" "));const words=normalize(answerText).split(" ").filter(w=>w.length>3&&!stop.has(w));const freq={};words.forEach(w=>freq[w]=(freq[w]||0)+1);return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12).map(x=>x[0])}
