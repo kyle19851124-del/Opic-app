@@ -59,7 +59,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 <div class="app">
   <div class="header">
     <div class="headerRow">
-      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v8.3</span></div></div>
+      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v8.4</span></div></div>
       <select id="themeSelect" onchange="setTheme(this.value)" style="max-width:135px;margin:0;padding:8px;font-size:13px">
         <option value="comfort">눈편한</option><option value="light">라이트</option><option value="dark">다크</option>
       </select>
@@ -253,7 +253,7 @@ init();
 </script>
 
 <script>
-/* v8.3 speech hotfix
+/* v8.4 speech hotfix
    Key change: create SpeechRecognition every run, start speech first,
    start recording only after recognition.onstart + 1000ms.
 */
@@ -359,7 +359,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v82CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v8.3 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v8.4 방식 적용.";
   v82Debug("초기화 완료");
 }
 
@@ -447,7 +447,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v8.3 speech hotfix
+/* v8.4 speech hotfix
    continuous=true + auto restart while practice is active.
    This fixes "only okay / first word recognized" on mobile Chrome.
 */
@@ -564,7 +564,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v83CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v8.3 연속 인식 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v8.4 연속 인식 방식 적용.";
   v83Debug("초기화 완료");
 }
 
@@ -656,6 +656,250 @@ function speechOnlyTest(){
   v83ManualStop = true;
   speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
   const ok = v83StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v8.4 speech hotfix
+   Fix duplicated interim/final transcript accumulation.
+   Keep one clean rolling transcript and append only new segments after auto-restart.
+*/
+let v84PendingRecordTimer = null;
+let v84ManualStop = false;
+let v84RestartTimer = null;
+let v84HasStartedRecording = false;
+let v84CommittedText = "";
+let v84BatchText = "";
+
+function v84Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v84CleanText(t){
+  return String(t || "").replace(/\s+/g, " ").trim();
+}
+
+function v84Merge(base, add){
+  base = v84CleanText(base);
+  add = v84CleanText(add);
+  if(!base) return add;
+  if(!add) return base;
+  if(base === add) return base;
+  if(base.endsWith(add)) return base;
+  if(add.startsWith(base)) return add;
+  const bw = base.split(" ");
+  const aw = add.split(" ");
+  const max = Math.min(bw.length, aw.length);
+  for(let n=max; n>=1; n--){
+    if(bw.slice(-n).join(" ") === aw.slice(0,n).join(" ")){
+      return v84CleanText(base + " " + aw.slice(n).join(" "));
+    }
+  }
+  return v84CleanText(base + " " + add);
+}
+
+function v84GetBatchFromEvent(event){
+  let text = "";
+  for(let i=0; i<event.results.length; i++){
+    text += (event.results[i][0].transcript || "").trim() + " ";
+  }
+  return v84CleanText(text);
+}
+
+function v84CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    speechText.innerText = v84CommittedText || "음성 인식 중입니다. 종료/분석을 누를 때까지 계속 듣습니다.";
+    recordStatus.innerText = "음성인식 활성화 · 1초 후 녹음 시작";
+    v84Debug("onstart OK");
+
+    if(practiceStarted && !v84HasStartedRecording){
+      v84PendingRecordTimer = setTimeout(async () => {
+        v84PendingRecordTimer = null;
+        if(practiceStarted && !v84HasStartedRecording){
+          v84HasStartedRecording = true;
+          v84Debug("녹음 시작 호출");
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }
+  };
+
+  rec.onresult = (event) => {
+    v84BatchText = v84GetBatchFromEvent(event);
+    const live = v84Merge(v84CommittedText, v84BatchText);
+    if(live) speechText.innerText = live;
+    v84Debug("onresult OK / words=" + (live ? live.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    if(msg !== "aborted"){
+      speechSupportStatus.innerText = "음성 인식 오류: " + msg + " · 자동 재시도 가능";
+    }
+    v84Debug("onerror=" + msg);
+
+    if(practiceStarted && !v84ManualStop){
+      v84ScheduleRestart();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    v84CommittedText = v84Merge(v84CommittedText, v84BatchText);
+    const out = v84CleanText(v84CommittedText);
+
+    v84Debug("onend / words=" + (out ? out.split(/\s+/).length : 0));
+
+    if(out){
+      speechText.innerText = out;
+      finalSpeechText = out;
+      interimSpeechText = "";
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 다시 말해보세요.";
+    }
+
+    if(practiceStarted && !v84ManualStop){
+      v84ScheduleRestart();
+    }else if(v84ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v84ScheduleRestart(){
+  if(v84RestartTimer) clearTimeout(v84RestartTimer);
+  v84RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v84ManualStop){
+      v84Debug("자동 재시작");
+      v84StartSpeech(false);
+    }
+  }, 300);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v84Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v84CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v8.4 중복 제거 방식 적용.";
+  v84Debug("초기화 완료");
+}
+
+function v84StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v84Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      v84CommittedText = "";
+      v84BatchText = "";
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v84CreateRecognition();
+    v84Debug("start 호출 직전");
+    recognition.start();
+    v84Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v84Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v84ManualStop = false;
+  v84HasStartedRecording = false;
+
+  recordStatus.innerText = "음성인식 시작 중...";
+  const ok = v84StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 시작합니다.";
+    v84HasStartedRecording = true;
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v84ManualStop = true;
+
+  if(v84RestartTimer){
+    clearTimeout(v84RestartTimer);
+    v84RestartTimer = null;
+  }
+  if(v84PendingRecordTimer){
+    clearTimeout(v84PendingRecordTimer);
+    v84PendingRecordTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v84Debug("stop 예외"); }
+  }else{
+    v84Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 650);
+  }, 250);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v84ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v84StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v84ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v84StartSpeech(true);
   if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
 }
 </script>
