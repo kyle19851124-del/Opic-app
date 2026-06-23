@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OPIc Coach</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#4F7A67" />
+<script src="data.js"></script>
+<style>
+:root{
+  --bg:#F4EFE7;--panel:#FFF9F1;--panel2:#EFE6D7;--text:#2F2A24;--muted:#766B5E;--border:#E2D4C1;
+  --primary:#4F7A67;--primary2:#446B5A;--danger:#A06A6A;--warn:#9A8768;--success:#6B8F71;
+  --hard:#FFF1DF;--done:#EDF7E9;--wrong:#FAEAEA;--mark:#F4E7A1;--em:#F2D4D4;
+  --shadow:0 2px 14px rgba(65,45,25,.10);
+}
+[data-theme="light"]{--bg:#F7F7F8;--panel:#FFFFFF;--panel2:#F1F5F9;--text:#202123;--muted:#6B7280;--border:#E5E7EB;--primary:#4F7A67;--danger:#A06A6A;--warn:#9A8768;--success:#6B8F71;--shadow:0 2px 14px rgba(0,0,0,.08)}
+[data-theme="dark"]{--bg:#111827;--panel:#1F2937;--panel2:#273449;--text:#F9FAFB;--muted:#CBD5E1;--border:#374151;--primary:#6B8F71;--danger:#B07A7A;--warn:#B09B78;--success:#7FA384;--shadow:0 2px 14px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:rgba(255,151,64,var(--blue-filter,0));z-index:9999;mix-blend-mode:multiply}
+.app{max-width:840px;margin:0 auto;min-height:100vh;padding-bottom:128px}
+.header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--border);padding:12px 14px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.headerRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;font-size:20px}.logo{width:36px;height:36px;border-radius:11px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900}
+.summary{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:18px;margin:12px 12px;padding:16px;box-shadow:var(--shadow)}
+.label{font-size:13px;color:var(--muted);font-weight:750;margin-bottom:8px}
+select,input,textarea,button{width:100%;border-radius:12px;font-size:16px;padding:13px;margin-top:8px}
+select,input,textarea{border:1px solid var(--border);background:var(--panel);color:var(--text)}
+input[type=range]{padding:0;margin-top:8px;accent-color:var(--primary)}
+textarea{min-height:190px;line-height:1.55;display:none}button{border:0;background:var(--primary);color:#fff;font-weight:850}
+button.secondary{background:#7A8075}button.success{background:var(--success)}button.danger{background:var(--danger)}button.warn{background:var(--warn)}button.light{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.hero{background:linear-gradient(135deg,#345D49,#4F7A67);color:#FFF9F1;border-radius:18px;overflow:hidden;min-height:178px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;padding:22px;margin:12px;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow)}
+.hero h2{font-size:27px;line-height:1.34;margin:0 0 10px;font-weight:900}.hero p{font-size:15px;line-height:1.6;margin:0;color:rgba(255,249,241,.9)}.heroImg{justify-self:end;width:145px;height:145px;border-radius:20px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,.25)}
+.heroImg img{width:100%;height:100%;object-fit:cover}
+.practiceCard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px}.practiceCard button{height:64px;font-size:19px;border-radius:17px;margin-top:0}.practiceCard .stop{background:var(--panel);color:var(--text);border:1px solid var(--border)}
+.iconGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px}.iconBtn{height:98px;border-radius:16px;background:var(--panel);border:1px solid var(--border);color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow);font-weight:800}.iconBtn .ico{font-size:28px;line-height:1}.iconBtn.ok .ico{color:var(--success)}.iconBtn.fail .ico{color:var(--danger)}.iconBtn.main{background:var(--primary);color:white}.iconBtn.main .ico{color:white}
+#meta{color:var(--primary);font-size:14px;font-weight:800;line-height:1.5;margin-bottom:8px}#question{font-size:21px;font-weight:850;line-height:1.55;white-space:pre-line}
+.chatCard{border-radius:18px 18px 18px 6px}.hardBox{background:var(--hard);border-color:var(--warn)}.doneBox{background:var(--done);border-color:var(--success)}
+#answer{font-size:17px;line-height:1.7;white-space:pre-line;display:none}
+.badge{display:inline-block;padding:4px 9px;margin:2px 4px 7px 0;border-radius:999px;font-size:12px;font-weight:850}.badgeHard{background:#9A8768;color:#fff}.badgeDone{background:#6B8F71;color:#fff}.badgeWrong{background:#A06A6A;color:#fff}.badgeNormal{background:var(--panel2);color:var(--text)}
+.star{font-size:27px;color:#c7c7c7;cursor:pointer;padding-right:3px;user-select:none}.star.on{color:#B9974C}
+.timer{text-align:center;font-size:40px;font-weight:900;margin:6px 0;color:var(--text)}.sub{text-align:center;color:var(--muted);font-size:13px}
+mark.keyword{background:var(--mark);padding:1px 3px;border-radius:4px}mark.emphasis{background:var(--em);padding:1px 3px;border-radius:4px;font-weight:800}
+audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size:13px;color:var(--muted);line-height:1.55}
+.metricGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.metric{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center}.metric .num{font-size:24px;font-weight:900}.metric .cap{font-size:12px;color:var(--muted);margin-top:3px}
+.progressOuter{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-top:8px}.progressInner{height:100%;background:var(--primary);width:0%}
+.compareList{font-size:14px;line-height:1.6}.ok{color:var(--success);font-weight:850}.miss{color:var(--danger);font-weight:850}
+#speechText{white-space:pre-line;line-height:1.6;background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:14px;min-height:72px}
+.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--panel2);font-size:12px;font-weight:800;margin:2px}
+.actionDock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--border);box-shadow:0 -4px 18px rgba(0,0,0,.10);padding:9px 12px}.actionInner{max-width:840px;margin:0 auto}.actionDock button{margin-top:0;height:48px;font-size:15px;border-radius:14px}.stack{display:grid;gap:8px}.statusLine{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
+.cheer{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center}.cheer img{width:80px;height:80px;object-fit:cover;border-radius:18px;border:1px solid var(--border)}.bubble{background:var(--panel2);border:1px solid var(--border);border-radius:18px;padding:14px;font-weight:800;line-height:1.5}
+@media(max-width:420px){.hero{grid-template-columns:1fr .78fr;padding:18px}.hero h2{font-size:22px}.heroImg{width:118px;height:118px}.iconBtn{height:88px;font-size:14px}.iconBtn .ico{font-size:25px}.practiceCard button{font-size:17px}}
+</style>
+
+<style>
+/* v10.2 clean integrated UX */
+:root{--dock-h:178px}
+.app{padding-bottom:190px!important}
+.header{padding:10px 14px}
+.headerRow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{font-size:18px!important}.logo{width:34px!important;height:34px!important}
+.summary{font-size:11px!important;margin-top:4px!important}
+#themeSelect{display:none!important}
+.hero{min-height:104px!important;padding:14px 16px!important;margin:10px 12px!important;grid-template-columns:1.18fr .62fr!important;border-radius:16px!important}
+.hero h2{font-size:19px!important;line-height:1.25!important;margin:0 0 5px!important}
+.hero p{font-size:12px!important;line-height:1.35!important}
+.heroImg{width:78px!important;height:78px!important;border-radius:16px!important}
+.practiceCard,.iconGrid,.quickTop{display:none!important}
+.baekhoSticky{position:sticky;top:56px;z-index:15;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:0 3px 12px rgba(0,0,0,.08);padding:8px 12px}
+.baekhoStickyInner{max-width:840px;margin:0 auto;display:grid;grid-template-columns:46px 1fr;gap:10px;align-items:center}
+.baekhoSticky img{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid var(--border)}
+.baekhoLine{font-size:14px;font-weight:850;color:var(--text)}
+.baekhoSub{font-size:12px;color:var(--muted);margin-top:2px}
+.card{margin:10px 12px!important;padding:14px!important;border-radius:16px!important}
+#settingsCard{display:none}
+#settingsCard.open{display:block}
+#settingsCard .card{margin-left:0!important;margin-right:0!important;box-shadow:none!important}
+#question{font-size:19px!important;line-height:1.5!important}
+#answer{font-size:16px!important;line-height:1.6!important}
+.timer{font-size:36px!important;margin:2px 0!important}
+.metricGrid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+.metric{padding:10px 6px!important;border-radius:12px!important}
+.metric .num{font-size:22px!important}.metric .cap{font-size:11px!important}
+.studyActions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.studyActions button,.editActions button{height:48px;margin:0;font-size:14px}
+.editActions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.cheer{grid-template-columns:58px 1fr!important}.cheer img{width:58px!important;height:58px!important;border-radius:14px!important}.bubble{padding:11px!important;font-size:14px!important}
+.actionDock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:1px solid var(--border);box-shadow:0 -4px 18px rgba(0,0,0,.10);padding:8px 10px!important}
+.actionInner{max-width:840px;margin:0 auto;display:grid;gap:7px}
+.actionDock .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.actionDock .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.actionDock button{height:43px!important;margin:0!important;font-size:13px!important;padding:7px 4px!important;border-radius:13px!important;line-height:1.15!important}
+.statusLine{font-size:11px!important}
+.hiddenImportant{display:none!important}
+@media(max-width:420px){
+  .baekhoSticky{top:56px}
+  .baekhoLine{font-size:13px}.baekhoSub{font-size:11px}
+  .app{padding-bottom:188px!important}
+}
+</style>
+
+
+<style>
+/* v10.2 - C안 디자인 + v10 기능 통합 */
+:root{--dock-h:154px;--btn-red:#E53935;--btn-red-bg:#FFF3F1;--btn-green:#2F654C;--btn-cream:#FFF8EF;--line:#E8D7C3}
+.app{padding-bottom:170px!important;background:var(--bg)!important}
+.header{padding:10px 14px!important;background:var(--bg)!important}
+.headerRow{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+.brand{font-size:18px!important;font-weight:850!important}.logo{width:34px!important;height:34px!important;border-radius:10px!important}
+.summary{font-size:11px!important;margin-top:4px!important;color:var(--muted)!important}
+#themeSelect{display:none!important}.quickTop,.baekhoSticky,.practiceCard,.iconGrid{display:none!important}
+.hero{min-height:82px!important;padding:12px 15px!important;margin:8px 12px 10px!important;grid-template-columns:1.25fr .55fr!important;border-radius:16px!important;background:linear-gradient(135deg,#285D42,#3B7658)!important;overflow:hidden!important}
+.hero h2{font-size:17px!important;line-height:1.25!important;margin:0 0 5px!important;color:#fff!important}
+.hero p{font-size:11px!important;line-height:1.35!important;color:rgba(255,255,255,.88)!important}
+.heroImg{width:66px!important;height:66px!important;border-radius:16px!important;object-fit:cover!important;background:#fff3!important}
+.card{margin:9px 12px!important;padding:14px!important;border-radius:17px!important;background:var(--panel)!important;border:1px solid var(--line)!important;box-shadow:0 4px 14px rgba(73,52,31,.08)!important}
+#settingsCard{display:none}#settingsCard.open{display:block}#settingsCard .card{margin-left:0!important;margin-right:0!important;box-shadow:none!important}
+.contentTabs{margin:9px 12px 0!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;background:var(--panel)!important;border:1px solid var(--line)!important;border-radius:17px 17px 0 0!important;overflow:hidden!important}
+.contentTabs button{height:48px!important;border:0!important;border-right:1px solid var(--line)!important;background:transparent!important;color:var(--muted)!important;font-size:15px!important;font-weight:850!important;margin:0!important;border-radius:0!important}
+.contentTabs button:last-child{border-right:0!important}.contentTabs button.active{color:var(--primary)!important;background:rgba(79,122,103,.08)!important;border-bottom:4px solid var(--primary)!important}
+#questionBox{margin-top:0!important;border-radius:0 0 17px 17px!important}
+#question{font-size:20px!important;line-height:1.48!important;font-weight:850!important}#answer{font-size:16px!important;line-height:1.6!important}
+.timer{font-size:34px!important;margin:1px 0!important}.metricGrid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}.metric{padding:10px 6px!important;border-radius:14px!important;background:var(--panel2)!important}.metric .num{font-size:22px!important}.metric .cap{font-size:11px!important}.progressOuter{height:9px!important;border-radius:8px!important}
+.studyActions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.studyActions button,.editActions button{height:46px;margin:0;font-size:14px;border-radius:14px}.editActions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.cheer{grid-template-columns:58px 1fr!important}.cheer img{width:58px!important;height:58px!important;border-radius:14px!important}.bubble{padding:11px!important;font-size:14px!important}
+.actionDock{position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:35!important;background:var(--panel)!important;border-top:1px solid var(--line)!important;box-shadow:0 -5px 18px rgba(0,0,0,.11)!important;padding:9px 10px 7px!important}
+.actionInner{max-width:840px!important;margin:0 auto!important;display:block!important}
+.actionScroll{display:grid!important;grid-auto-flow:column!important;grid-auto-columns:calc((100% - 8px)/2)!important;gap:8px!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;scroll-snap-type:x mandatory!important;padding:0 2px 8px!important;-webkit-overflow-scrolling:touch!important}
+.actionScroll::-webkit-scrollbar{height:4px}.actionScroll::-webkit-scrollbar-thumb{background:rgba(79,122,103,.35);border-radius:10px}
+.actionDock button{scroll-snap-align:start!important;height:58px!important;margin:0!important;border-radius:16px!important;background:var(--btn-cream)!important;border:1px solid var(--line)!important;color:var(--text)!important;font-size:15px!important;font-weight:850!important;box-shadow:0 3px 10px rgba(73,52,31,.06)!important}
+.actionDock button.primaryBtn{background:var(--btn-green)!important;color:white!important}
+.actionDock button.recordBtn{background:var(--btn-red-bg)!important;border-color:var(--btn-red)!important;color:var(--btn-red)!important}
+.actionDock button.stopRecordBtn{background:var(--btn-green)!important;border-color:var(--btn-green)!important;color:white!important}
+.statusLine{font-size:11px!important;margin-top:0!important;color:var(--muted)!important;text-align:center!important}
+@media(max-width:420px){.hero{min-height:78px!important}.hero h2{font-size:16px!important}.hero p{font-size:11px!important}.heroImg{width:62px!important;height:62px!important}.actionDock button{height:56px!important;font-size:14px!important}.app{padding-bottom:166px!important}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="headerRow">
+      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v10.2</span></div></div>
+      <button class="light" onclick="toggleSettings()" style="max-width:82px;margin:0;padding:8px;font-size:13px">⚙ 설정</button>
+    </div>
+    <div class="summary">총 <span id="totalCount"></span>개 · 어려움 <span id="hardCount"></span> · 틀림 <span id="wrongCount"></span> · 암기완료 <span id="doneCount"></span></div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <h2>백호랑<br>연습 시작할까요? 🐶</h2>
+      <p>기본은 음성인식 분석,<br>녹음은 별도 실행해요.</p>
+    </div>
+    <div class="heroImg"><img id="heroMascot" src="baekho-smile.png" alt="백호"></div>
+  </div>
+
+  <div class="practiceCard">
+    <button onclick="startPractice()">🎙 연습 시작</button>
+    <button class="stop" onclick="stopPractice()">▮ 종료 & 분석</button>
+  </div>
+
+  <div class="iconGrid">
+    <button class="iconBtn main" onclick="pickRandomQuestion()"><span class="ico">↻</span><span>랜덤 문제</span></button>
+    <button class="iconBtn" onclick="toggleAnswer()"><span class="ico">👁</span><span>보기 답변</span></button>
+    <button class="iconBtn" onclick="toggleHard()"><span class="ico">☆</span><span>어려움</span></button>
+    <button class="iconBtn ok" onclick="markSuccess()"><span class="ico">✓</span><span>성공</span></button>
+    <button class="iconBtn fail" onclick="markFail()"><span class="ico">×</span><span>실패</span></button>
+    <button class="iconBtn" onclick="clearStars()"><span class="ico">☆</span><span>별 해제</span></button>
+    <button class="iconBtn" onclick="editAnswer()"><span class="ico">✎</span><span>수정</span></button>
+    <button class="iconBtn" onclick="saveAnswer()"><span class="ico">▣</span><span>저장</span></button>
+    <button class="iconBtn" onclick="retrySpeechOnly()"><span class="ico">↺</span><span>인식 재시도</span></button>
+    <button class="iconBtn" onclick="speechOnlyTest()"><span class="ico">🎤</span><span>음성 테스트</span></button>
+  </div>
+
+  <div id="settingsCard">
+    <div class="card">
+      <div class="label">화면 모드</div>
+      <button class="light" onclick="toggleSettings()" style="max-width:82px;margin:0;padding:8px;font-size:13px">⚙ 설정</button>
+    </div>
+  <div id="settingsCard">
+    <div class="card">
+      <div class="label">화면 모드</div>
+      <select id="themeSelect" onchange="setTheme(this.value)">
+        <option value="comfort">눈편한</option>
+        <option value="light">라이트</option>
+        <option value="dark">다크</option>
+      </select>
+    </div>
+  <div class="card">
+    <div class="label">블루라이트 필터: <span id="blueFilterValue">0%</span></div>
+    <input type="range" id="blueFilterSlider" min="0" max="45" value="0" oninput="setBlueFilter(this.value)" />
+    <div class="small">추천: 낮 10~15%, 밤 25~35%.</div>
+  </div>
+
+  <div class="card">
+    <div class="grid2">
+      <div><div class="label">학습 모드</div><select id="modeSelect" onchange="changeMode()"><option value="STUDY">일반 학습</option><option value="EXAM">시험모드</option></select></div>
+      <div><div class="label">시험 문제 수</div><input id="examCount" type="number" value="10" min="1" max="30"/></div>
+    </div>
+    <button id="examStartBtn" class="success hidden" onclick="startExam()">시험 시작</button>
+  </div>
+
+  <div class="card">
+    <div class="grid2">
+      <div><div class="label">카테고리</div><select id="categoryFilter" onchange="resetScreen()"><option value="ALL">전체 문제</option><option value="HARD">어려운 문제</option><option value="WRONG">틀린 문제</option><option value="DONE">외운 문제</option><option value="NOT_DONE">아직 외우는 중</option></select></div>
+      <div><div class="label">토픽</div><select id="topicFilter" onchange="resetScreen()"><option value="ALL">전체 토픽</option></select></div>
+    </div>
+  </div>
+
+  </div>
+
+
+  </div>
+
+  <div class="contentTabs">
+    <button id="tabQuestion" class="active" onclick="goQuestion()">📋 문제</button>
+    <button id="tabAnswer" onclick="showAnswerAndScroll()">💬 답변</button>
+    <button id="tabAnalysis" onclick="goAnalysis()">▮ 분석</button>
+  </div>
+  <div id="questionBox" class="card chatCard">
+    <div class="label">질문</div>
+    <div id="meta"></div><div id="badges"></div><div id="question">랜덤 문제를 뽑으세요.</div>
+    <div class="grid2" style="margin-top:12px"><button class="light" onclick="showAnswerAndScroll()">👁 모범답안 보기</button><button class="light" onclick="toggleHard()">☆ 어려움</button></div>
+    <div style="margin-top:10px">암기 별점: <span class="star" onclick="setStars(1)">★</span><span class="star" onclick="setStars(2)">★</span><span class="star" onclick="setStars(3)">★</span></div>
+  </div>
+
+  <div class="card">
+    <div class="label">답변 연습</div>
+    <div class="timer" id="recordTimer">00:00</div>
+    <div class="sub" id="recordStatus">대기 중 · 연습 시작은 음성인식/분석 전용입니다.</div>
+    <audio id="audioPlayer" controls class="hidden"></audio>
+    <div class="grid2" id="recordButtonsV102"><button class="light recordBtn" onclick="startRecordingPracticeOnly()">● 녹음만 시작</button><button class="light stopRecordBtn" onclick="stopRecordingPracticeOnly()">■ 녹음만 종료</button></div>
+    <div class="grid2" id="recordButtonsV10"><button class="light" onclick="startRecordingPracticeOnly()">● 녹음만 시작</button><button class="light" onclick="stopRecordingPracticeOnly()">■ 녹음만 종료</button></div>
+    <input id="recordFileName" placeholder="저장 파일 이름" oninput="saveRecordingSettings()" />
+    <input id="recordFolderMemo" placeholder="저장 폴더 메모: 예 Download/OPIc" oninput="saveRecordingSettings()" />
+    <button class="light hidden" id="downloadAudioBtn" onclick="downloadRecording()">녹음 파일 저장</button>
+  </div>
+
+  <div class="card">
+    <div class="label">인식 결과</div>
+    <div id="speechText">종료 후 최종 문장만 표시합니다.</div>
+    <div class="grid2"><button class="light" onclick="retrySpeechOnly()">인식만 재시도</button><button class="light" onclick="clearSpeechText()">텍스트 지우기</button></div>
+    <div class="small" id="speechSupportStatus"></div>
+    <div class="small" id="speechDebugStatus">디버그: 대기 중</div>
+  </div>
+
+  <div class="card">
+    <div class="label">답변 분석</div>
+    <div class="metricGrid">
+      <div class="metric"><div class="num" id="mTime">00:00</div><div class="cap">발화시간</div></div>
+      <div class="metric"><div class="num" id="mWords">0</div><div class="cap">단어수</div></div>
+      <div class="metric"><div class="num" id="mCoverage">0%</div><div class="cap">핵심 포함률</div></div>
+      <div class="metric"><div class="num" id="mJudge">대기</div><div class="cap">판정</div></div>
+    </div>
+    <div class="progressOuter"><div class="progressInner" id="coverageBar"></div></div>
+    <div class="compareList" id="compareResult" style="margin-top:10px">답변 종료 후 자동 분석됩니다.</div>
+  </div>
+
+  <div class="card">
+    <div class="label">모범 답변</div>
+    <div id="answer"></div><textarea id="answerEditor"></textarea>
+  </div>
+
+
+  <div class="card" id="studyActionsCard">
+    <div class="label">학습 결과</div>
+    <div class="studyActions">
+      <button class="success" onclick="markSuccess()">✓ 성공</button>
+      <button class="danger" onclick="markFail()">× 실패</button>
+      <button class="warn" onclick="toggleHard()">☆ 어려움</button>
+    </div>
+    <div class="editActions">
+      <button class="light" onclick="clearStars()">☆ 별 해제</button>
+      <button class="light" onclick="showAnswerAndScroll()">👁 답변</button>
+      <button class="light" onclick="editAnswer()">✎ 수정</button>
+      <button class="secondary" onclick="saveAnswer()">▣ 저장</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cheer">
+      <img id="cheerMascot" src="baekho-rest.png" alt="백호 응원">
+      <div class="bubble" id="cheerText">오늘도 백호와 완벽한 답변 만들기!</div>
+    </div>
+  </div>
+
+  <div id="examPanel" class="card hidden">
+    <div class="label">시험 결과</div><div id="examStatus"></div>
+    <div class="grid2"><button class="success" onclick="examSuccess()">✓ 이번 문제 성공</button><button class="danger" onclick="examFail()">× 이번 문제 실패</button></div>
+    <button class="secondary" onclick="endExam()">시험 종료</button>
+  </div>
+</div>
+
+<div class="actionDock">
+  <div class="actionInner">
+    <div class="actionScroll">
+      <button class="recordBtn" onclick="startRecordingPracticeOnly()">● 녹음</button>
+      <button class="stopRecordBtn" onclick="stopRecordingPracticeOnly()">■ 녹음끝</button>
+      <button onclick="playLastRecording()">🎧 듣기</button>
+      <button class="primaryBtn" onclick="startPractice()">🎤 연습</button>
+      <button onclick="stopPractice()">▮ 분석</button>
+      <button class="primaryBtn" onclick="pickRandomQuestion()">🎲 새문제</button>
+      <button onclick="goQuestion()">📌 문제보기</button>
+      <button onclick="showAnswerAndScroll()">👁 답안보기</button>
+    </div>
+    <div class="statusLine">좌우로 밀어 더 보기</div>
+  </div>
+</div>
+
+<script>
+const defaultItems=window.OPIC_DEFAULT_ITEMS||[];
+let progress=loadProgress(),opicItems=mergeDefaultWithProgress(defaultItems),currentItem=null;
+let recordTimerInterval=null,recordStartTime=null,lastDurationSec=0,mediaRecorder=null,audioChunks=[],recordedBlob=null;
+let recognition=null,recognizing=false,finalSpeechText="",interimSpeechText="",speechSupported=false;
+let speechStopRequested=false,practiceStarted=false;
+let exam={active:false,list:[],index:0,success:0,fail:0};
+const mascots=["baekho-smile.png","baekho-rest.png","baekho-focus.png"];
+const cheers=["오늘도 백호와 완벽한 답변 만들기!","백호가 응원해요!","IH 가보자!","한 문제만 더!","천천히 또박또박!"];
+
+function makeKey(item){return item.id||item.key||String(item.question||"").toLowerCase().trim().replace(/\s+/g," ")}
+function loadProgress(){try{return JSON.parse(localStorage.getItem("opicProgressV8")||localStorage.getItem("opicProgressV71")||localStorage.getItem("opicProgressV7")||localStorage.getItem("opicProgressV6")||"{}")}catch(e){return {}}}
+function saveProgress(){localStorage.setItem("opicProgressV8",JSON.stringify(progress));updateSummary()}
+function mergeDefaultWithProgress(defaults){return defaults.map(item=>{const k=makeKey(item),o=progress[k]||{};return {...item,isHard:!!o.isHard,isWrong:!!o.isWrong,stars:o.stars||0,answer:o.editedAnswer||item.answer,editedAnswer:o.editedAnswer||"",attempts:o.attempts||0,successCount:o.successCount||0,failCount:o.failCount||0,lastDurationSec:o.lastDurationSec||0,lastSpeechText:o.lastSpeechText||""}})}
+function syncCurrentToProgress(){if(!currentItem)return;progress[makeKey(currentItem)]={isHard:!!currentItem.isHard,isWrong:!!currentItem.isWrong,stars:currentItem.stars||0,editedAnswer:currentItem.editedAnswer||"",attempts:currentItem.attempts||0,successCount:currentItem.successCount||0,failCount:currentItem.failCount||0,lastDurationSec:currentItem.lastDurationSec||0,lastSpeechText:currentItem.lastSpeechText||""};saveProgress()}
+function init(){loadTheme();loadBlueFilter();buildTopicFilter();loadRecordingSettings();updateSummary();renderStars(0);setupSpeechRecognition();randomMascot()}
+function randomMascot(){const m=mascots[Math.floor(Math.random()*mascots.length)];heroMascot.src=m;cheerMascot.src=mascots[Math.floor(Math.random()*mascots.length)];cheerText.innerText=cheers[Math.floor(Math.random()*cheers.length)]}
+function buildTopicFilter(){const f=document.getElementById("topicFilter");f.innerHTML='<option value="ALL">전체 토픽</option>';[...new Set(opicItems.map(i=>i.topic))].sort().forEach(t=>{const o=document.createElement("option");o.value=t;o.innerText=t;f.appendChild(o)})}
+function updateSummary(){totalCount.innerText=opicItems.length;hardCount.innerText=opicItems.filter(x=>x.isHard).length;wrongCount.innerText=opicItems.filter(x=>x.isWrong).length;doneCount.innerText=opicItems.filter(x=>(x.stars||0)>=3).length}
+function setTheme(t){document.documentElement.setAttribute("data-theme",t);localStorage.setItem("opicTheme",t);themeSelect.value=t}
+function loadTheme(){setTheme(localStorage.getItem("opicTheme")||"comfort")}
+function setBlueFilter(v){const val=Math.max(0,Math.min(45,parseInt(v||0)));document.body.style.setProperty("--blue-filter",val/100);blueFilterValue.innerText=val+"%";blueFilterSlider.value=val;localStorage.setItem("opicBlueFilter",val)}
+function loadBlueFilter(){setBlueFilter(localStorage.getItem("opicBlueFilter")||12)}
+function changeMode(){const m=modeSelect.value;examStartBtn.classList.toggle("hidden",m!=="EXAM");examPanel.classList.toggle("hidden",m!=="EXAM"||!exam.active)}
+function getFilteredItems(){const c=categoryFilter.value,t=topicFilter.value;let l=opicItems;if(c==="HARD")l=l.filter(i=>i.isHard);if(c==="WRONG")l=l.filter(i=>i.isWrong);if(c==="DONE")l=l.filter(i=>(i.stars||0)>=3);if(c==="NOT_DONE")l=l.filter(i=>(i.stars||0)<3);if(t!=="ALL")l=l.filter(i=>i.topic===t);return l}
+function pickRandomQuestion(){const l=getFilteredItems();if(!l.length)return alert("선택한 카테고리/토픽에 문제가 없습니다.");currentItem=l[Math.floor(Math.random()*l.length)];randomMascot();renderCurrentItem(false)}
+function renderCurrentItem(showAnswer){resetPracticeStatus();clearAnalysis(false);meta.innerText="["+currentItem.topic+"] "+currentItem.docName;question.innerHTML=highlightText(currentItem.question,currentItem.questionHighlights||[],"keyword");answer.innerHTML=highlightText(currentItem.answer,currentItem.answerEmphasis||[],"emphasis");answer.style.display=showAnswer?"block":"none";answerEditor.value=currentItem.answer;answerEditor.style.display="none";speechText.innerText=currentItem.lastSpeechText||"종료 후 최종 문장만 표시합니다.";setDefaultRecordingFileName();renderBadges();renderStars(currentItem.stars||0);renderBoxStatus()}
+function highlightText(text,targets,cls){let safe=escapeHtml(text||"");targets.forEach(t=>{if(!t)return;safe=safe.replace(new RegExp("("+escapeRegExp(escapeHtml(t))+")","gi"),'<mark class="'+cls+'">$1</mark>')});return safe.replace(/\n/g,"<br>")}
+function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function escapeRegExp(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function renderBadges(){const b=[];if(currentItem.isHard)b.push('<span class="badge badgeHard">어려운 문제</span>');if(currentItem.isWrong)b.push('<span class="badge badgeWrong">틀린 문제</span>');if((currentItem.stars||0)>=3)b.push('<span class="badge badgeDone">암기완료</span>');if(!currentItem.isHard&&!currentItem.isWrong&&(currentItem.stars||0)<3)b.push('<span class="badge badgeNormal">학습중</span>');if(currentItem.lastDurationSec)b.push('<span class="badge badgeNormal">최근 '+formatTime(currentItem.lastDurationSec)+'</span>');badges.innerHTML=b.join("")}
+function renderBoxStatus(){questionBox.classList.remove("hardBox","doneBox");if((currentItem.stars||0)>=3)questionBox.classList.add("doneBox");else if(currentItem.isHard||currentItem.isWrong)questionBox.classList.add("hardBox")}
+function toggleAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display==="block")return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");answer.style.display=answer.style.display==="none"?"block":"none"}
+function toggleHard(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.isHard=!currentItem.isHard;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
+function toggleWrong(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.isWrong=!currentItem.isWrong;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
+function setStars(c){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.stars=c;if(c>=3)currentItem.isWrong=false;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
+function clearStars(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.stars=0;syncCurrentToProgress();renderCurrentItem(answer.style.display==="block")}
+function renderStars(c){document.querySelectorAll(".star").forEach((s,i)=>i<c?s.classList.add("on"):s.classList.remove("on"))}
+function markSuccess(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.attempts=(currentItem.attempts||0)+1;currentItem.successCount=(currentItem.successCount||0)+1;currentItem.stars=Math.min(3,(currentItem.stars||0)+1);if(currentItem.stars>=3)currentItem.isWrong=false;currentItem.lastDurationSec=lastDurationSec||currentItem.lastDurationSec||0;syncCurrentToProgress();renderCurrentItem(true)}
+function markFail(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");currentItem.attempts=(currentItem.attempts||0)+1;currentItem.failCount=(currentItem.failCount||0)+1;currentItem.isWrong=true;currentItem.isHard=true;currentItem.stars=Math.max(0,(currentItem.stars||0)-1);currentItem.lastDurationSec=lastDurationSec||currentItem.lastDurationSec||0;syncCurrentToProgress();renderCurrentItem(true)}
+function editAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");answer.style.display="none";answerEditor.style.display="block"}
+function saveAnswer(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(answerEditor.style.display!=="block")return alert("먼저 답변 수정을 누르세요.");currentItem.answer=answerEditor.value;currentItem.editedAnswer=answerEditor.value;syncCurrentToProgress();renderCurrentItem(true);alert("답변 저장 완료")}
+function formatTime(sec){sec=Math.max(0,sec||0);return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
+function startRecordTimer(){recordStartTime=Date.now();lastDurationSec=0;recordTimer.innerText="00:00";recordTimerInterval=setInterval(()=>{lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordTimer.innerText=formatTime(lastDurationSec)},250)}
+function stopRecordTimer(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;if(recordStartTime){lastDurationSec=Math.floor((Date.now()-recordStartTime)/1000);recordStartTime=null;recordTimer.innerText=formatTime(lastDurationSec);if(currentItem){currentItem.lastDurationSec=lastDurationSec;syncCurrentToProgress();renderBadges()}}}
+function resetPracticeStatus(){if(recordTimerInterval)clearInterval(recordTimerInterval);recordTimerInterval=null;recordStartTime=null;lastDurationSec=0;recordedBlob=null;audioChunks=[];practiceStarted=false;audioPlayer.removeAttribute("src");audioPlayer.classList.add("hidden");downloadAudioBtn.classList.add("hidden");recordTimer.innerText="00:00";recordStatus.innerText="대기 중 · 연습 시작은 음성인식/분석 전용입니다.";finalSpeechText="";interimSpeechText=""}
+async function startRecordingOnly(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){recordStatus.innerText="녹음 미지원";return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);mediaRecorder.onstop=()=>{stopRecordTimer();recordedBlob=new Blob(audioChunks,{type:"audio/webm"});audioPlayer.src=URL.createObjectURL(recordedBlob);audioPlayer.classList.remove("hidden");downloadAudioBtn.classList.remove("hidden");recordStatus.innerText="녹음 완료 · "+formatTime(lastDurationSec);stream.getTracks().forEach(t=>t.stop());setTimeout(analyzeSpeech,350)};mediaRecorder.start();startRecordTimer();recordStatus.innerText="녹음 중..."}catch(e){alert("마이크 권한이 필요합니다.")}}
+function stopRecordingOnly(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();else stopRecordTimer()}
+async function startPractice(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");resetPracticeStatus();clearAnalysis(false);practiceStarted=true;if(speechSupported&&recognition){try{recordStatus.innerText="음성인식 시작 중...";recognition.start();setTimeout(async()=>{if(practiceStarted)await startRecordingOnly()},1000)}catch(e){speechSupportStatus.innerText="음성인식 시작 실패 · 녹음만 시작합니다.";await startRecordingOnly()}}else{recordStatus.innerText="음성인식 미지원 · 녹음만 시작합니다.";await startRecordingOnly()}}
+function stopPractice(){practiceStarted=false;speechStopRequested=true;if(recognition&&recognizing){try{recognition.stop()}catch(e){}}setTimeout(()=>{stopRecordingOnly();setTimeout(analyzeSpeech,650)},250)}
+function cleanFileName(n){return String(n||"opic_recording").replace(/[\\/:*?"<>|]/g,"_").trim()||"opic_recording"}
+function setDefaultRecordingFileName(){if(!currentItem)return;const date=new Date().toISOString().slice(0,10);recordFileName.value=cleanFileName(makeKey(currentItem)+"_"+date)}
+function saveRecordingSettings(){localStorage.setItem("opicRecordFolderMemo",recordFolderMemo.value||"")}
+function loadRecordingSettings(){recordFolderMemo.value=localStorage.getItem("opicRecordFolderMemo")||""}
+function downloadRecording(){if(!recordedBlob)return alert("저장할 녹음 파일이 없습니다.");const fn=cleanFileName(recordFileName.value)+".webm";localStorage.setItem("opicLastRecordFileName",fn);saveRecordingSettings();const url=URL.createObjectURL(recordedBlob),a=document.createElement("a");a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url)}
+function setupSpeechRecognition(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){speechSupportStatus.innerText="음성 인식 미지원 환경입니다. 녹음은 가능합니다.";speechSupported=false;return}speechSupported=true;speechSupportStatus.innerText="음성 인식 API 감지됨. v3 방식 복구: 인식 시작 → 1초 후 녹음 시작.";recognition=new SR();recognition.lang="en-US";recognition.continuous=true;recognition.interimResults=true;recognition.maxAlternatives=1;recognition.onstart=()=>{recognizing=true;finalSpeechText="";interimSpeechText="";speechStopRequested=false;speechText.innerText="음성 인식 중입니다. 종료 후 최종 문장을 표시합니다.";recordStatus.innerText="음성인식 시작됨 · 1초 후 녹음 시작"};recognition.onresult=(event)=>{let interim="";for(let i=event.resultIndex;i<event.results.length;i++){const txt=event.results[i][0].transcript;if(event.results[i].isFinal)finalSpeechText+=txt.trim()+" ";else interim+=txt.trim()+" "}interimSpeechText=interim.trim()};recognition.onerror=(event)=>{recognizing=false;const msg=event.error||"unknown";speechSupportStatus.innerText="음성 인식 오류: "+msg+" · 녹음은 계속 가능합니다.";if(!finalSpeechText&&!interimSpeechText)speechText.innerText="음성 인식 오류: "+msg};recognition.onend=()=>{recognizing=false;const out=(finalSpeechText||interimSpeechText||"").trim();if(out){speechText.innerText=out;if(currentItem){currentItem.lastSpeechText=out;syncCurrentToProgress()}}else{speechText.innerText="인식된 문장이 없습니다. ‘인식만 재시도’를 눌러 짧게 다시 말해보세요."}if(speechStopRequested)setTimeout(analyzeSpeech,250)}}
+function retrySpeechOnly(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(!recognition)return alert("이 환경에서는 음성 인식을 지원하지 않습니다.");finalSpeechText="";interimSpeechText="";speechStopRequested=true;speechText.innerText="인식만 재시도 중입니다. 짧게 다시 말해보세요.";try{recognition.start()}catch(e){speechSupportStatus.innerText="음성 인식 재시도 실패 · 잠시 후 다시 시도하세요."}}
+function clearSpeechText(){finalSpeechText="";interimSpeechText="";speechText.innerText="종료 후 최종 문장만 표시합니다.";if(currentItem){currentItem.lastSpeechText="";syncCurrentToProgress()}clearAnalysis(false)}
+function normalize(t){return String(t||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim()}
+function getKeywords(answerText){const stop=new Set("the a an and or but so because to of in on at for with my i it is are was were be been this that there as about from by do did does have has had you know actually okay let me tell very really quite also then after before".split(" "));const words=normalize(answerText).split(" ").filter(w=>w.length>3&&!stop.has(w));const freq={};words.forEach(w=>freq[w]=(freq[w]||0)+1);return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12).map(x=>x[0])}
+function analyzeSpeech(){if(!currentItem)return;const spoken=normalize(speechText.innerText);const words=spoken?spoken.split(" ").filter(Boolean):[];const keys=getKeywords(currentItem.answer);let hit=0,html="";keys.forEach(k=>{if(spoken.includes(k)){hit++;html+='<span class="ok">✓ '+k+'</span><br>'}else html+='<span class="miss">✗ '+k+'</span><br>'});const cov=keys.length?Math.round(hit/keys.length*100):0;mTime.innerText=formatTime(lastDurationSec||currentItem.lastDurationSec||0);mWords.innerText=words.length;mCoverage.innerText=cov+"%";coverageBar.style.width=cov+"%";mJudge.innerText=judgeAnswer(lastDurationSec||currentItem.lastDurationSec||0,words.length,cov);compareResult.innerHTML=html||"분석할 핵심어가 부족합니다."}
+function judgeAnswer(sec,words,cov){if(cov>=75&&words>=70)return"IH권";if(cov>=55&&words>=45)return"양호";if(words<25)return"짧음";return"보완"}
+function clearAnalysis(reset=true){mTime.innerText="00:00";mWords.innerText="0";mCoverage.innerText="0%";mJudge.innerText="대기";coverageBar.style.width="0%";compareResult.innerText=reset?"답변 종료 후 자동 분석됩니다.":"새 문제 대기 중입니다."}
+function startExam(){const count=Math.max(1,Math.min(30,parseInt(examCount.value||"10"))),pool=getFilteredItems();if(!pool.length)return alert("시험 문제가 없습니다.");exam.list=shuffle([...pool]).slice(0,Math.min(count,pool.length));exam.index=0;exam.success=0;exam.fail=0;exam.active=true;examPanel.classList.remove("hidden");showExamQuestion()}
+function showExamQuestion(){if(!exam.active||exam.index>=exam.list.length)return endExam();currentItem=exam.list[exam.index];renderCurrentItem(false);updateExamStatus()}
+function updateExamStatus(){examStatus.innerHTML='<span class="pill">진행 '+(exam.index+1)+" / "+exam.list.length+'</span><span class="pill">성공 '+exam.success+'</span><span class="pill">실패 '+exam.fail+"</span>"}
+function examSuccess(){if(!exam.active)return;markSuccess();exam.success++;exam.index++;showExamQuestion()}
+function examFail(){if(!exam.active)return;markFail();exam.fail++;exam.index++;showExamQuestion()}
+function endExam(){if(!exam.active)return;const total=exam.success+exam.fail,rate=total?Math.round(exam.success/total*100):0;examStatus.innerHTML="<b>시험 종료</b><br>총 "+total+"문제 / 성공 "+exam.success+" / 실패 "+exam.fail+"<br>성공률 "+rate+"%";exam.active=false}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function resetScreen(){currentItem=null;resetPracticeStatus();clearAnalysis(false);meta.innerText="";badges.innerHTML="";question.innerText="랜덤 문제를 뽑으세요.";answer.innerText="";answer.style.display="none";answerEditor.style.display="none";answerEditor.value="";questionBox.classList.remove("hardBox","doneBox");speechText.innerText="종료 후 최종 문장만 표시합니다.";renderStars(0)}
+if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
+init();
+</script>
+
+<script>
+/* v10.2 speech hotfix
+   Key change: create SpeechRecognition every run, start speech first,
+   start recording only after recognition.onstart + 1000ms.
+*/
+let v82PendingRecordTimer = null;
+let v82ManualStop = false;
+
+function v82Debug(msg){
+  try{
+    speechDebugStatus.innerText = "디버그: " + msg;
+  }catch(e){}
+}
+
+function v82CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    finalSpeechText = "";
+    interimSpeechText = "";
+    speechText.innerText = "음성 인식 중입니다. 말한 뒤 종료/분석을 누르세요.";
+    recordStatus.innerText = "음성인식 활성화 · 녹음과 분리 실행";
+    v82Debug("onstart OK");
+
+    if(practiceStarted){
+      v82PendingRecordTimer = setTimeout(async () => {
+        v82PendingRecordTimer = null;
+        if(practiceStarted){
+          v82Debug("녹음 시작 호출");
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }
+  };
+
+  rec.onresult = (event) => {
+    let interim = "";
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const txt = event.results[i][0].transcript || "";
+      if(event.results[i].isFinal){
+        finalSpeechText += txt.trim() + " ";
+      }else{
+        interim += txt.trim() + " ";
+      }
+    }
+    interimSpeechText = interim.trim();
+    v82Debug("onresult OK / finalLen=" + finalSpeechText.length + " / interim=" + (interimSpeechText || "-"));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    speechSupportStatus.innerText = "음성 인식 오류: " + msg;
+    v82Debug("onerror=" + msg);
+
+    if(!finalSpeechText && !interimSpeechText){
+      speechText.innerText = "음성 인식 오류: " + msg;
+    }
+
+    if(practiceStarted && !recordStartTime){
+      recordStatus.innerText = "음성인식 오류 · 녹음만 진행합니다.";
+      startRecordingOnly();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    const out = (finalSpeechText || interimSpeechText || "").trim();
+    v82Debug("onend / text=" + (out ? "있음" : "없음"));
+
+    if(out){
+      speechText.innerText = out;
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 음성 테스트로 먼저 확인해 주세요.";
+    }
+
+    if(v82ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v82Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v82CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 방식 적용.";
+  v82Debug("초기화 완료");
+}
+
+function v82StartSpeech(forPractice){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v82Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    finalSpeechText = "";
+    interimSpeechText = "";
+    v82ManualStop = false;
+    recognition = v82CreateRecognition();
+
+    practiceStarted = !!forPractice;
+    speechText.innerText = "음성 인식 시작 중...";
+    v82Debug("start 호출 직전");
+    recognition.start();
+    v82Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v82Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  recordStatus.innerText = "음성인식 시작 중...";
+
+  const ok = v82StartSpeech(true);
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 시작합니다.";
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v82ManualStop = true;
+
+  if(v82PendingRecordTimer){
+    clearTimeout(v82PendingRecordTimer);
+    v82PendingRecordTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v82Debug("stop 예외"); }
+  }else{
+    v82Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 650);
+  }, 250);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  v82ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v82StartSpeech(false);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  v82ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 'hello my name is simon'이라고 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v82StartSpeech(false);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v10.2 speech hotfix
+   continuous=true + auto restart while practice is active.
+   This fixes "only okay / first word recognized" on mobile Chrome.
+*/
+let v83PendingRecordTimer = null;
+let v83ManualStop = false;
+let v83RestartTimer = null;
+let v83HasStartedRecording = false;
+
+function v83Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v83CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    speechText.innerText = "음성 인식 중입니다. 종료/분석을 누를 때까지 계속 듣습니다.";
+    recordStatus.innerText = "음성인식 활성화 · 녹음과 분리 실행";
+    v83Debug("onstart OK");
+
+    if(practiceStarted && !v83HasStartedRecording){
+      v83PendingRecordTimer = setTimeout(async () => {
+        v83PendingRecordTimer = null;
+        if(practiceStarted && !v83HasStartedRecording){
+          v83HasStartedRecording = true;
+          v83Debug("녹음 시작 호출");
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }
+  };
+
+  rec.onresult = (event) => {
+    let interim = "";
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const txt = event.results[i][0].transcript || "";
+      if(event.results[i].isFinal){
+        finalSpeechText += txt.trim() + " ";
+      }else{
+        interim += txt.trim() + " ";
+      }
+    }
+    interimSpeechText = interim.trim();
+
+    const live = (finalSpeechText + " " + interimSpeechText).trim();
+    if(live){
+      speechText.innerText = live;
+    }
+    v83Debug("onresult OK / words=" + (live ? live.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    speechSupportStatus.innerText = "음성 인식 오류: " + msg + " · 자동 재시도 가능";
+    v83Debug("onerror=" + msg);
+
+    if(practiceStarted && !v83ManualStop){
+      v83ScheduleRestart();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    const out = (finalSpeechText + " " + interimSpeechText).trim();
+    v83Debug("onend / text=" + (out ? "있음" : "없음"));
+
+    if(out){
+      speechText.innerText = out;
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 다시 말해보세요.";
+    }
+
+    if(practiceStarted && !v83ManualStop){
+      v83ScheduleRestart();
+    }else if(v83ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v83ScheduleRestart(){
+  if(v83RestartTimer) clearTimeout(v83RestartTimer);
+  v83RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v83ManualStop){
+      v83Debug("자동 재시작");
+      v83StartSpeech(false);
+    }
+  }, 250);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v83Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v83CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 연속 인식 방식 적용.";
+  v83Debug("초기화 완료");
+}
+
+function v83StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v83Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v83CreateRecognition();
+    v83Debug("start 호출 직전");
+    recognition.start();
+    v83Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v83Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v83ManualStop = false;
+  v83HasStartedRecording = false;
+
+  recordStatus.innerText = "음성인식 시작 중...";
+  const ok = v83StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 시작합니다.";
+    v83HasStartedRecording = true;
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v83ManualStop = true;
+
+  if(v83RestartTimer){
+    clearTimeout(v83RestartTimer);
+    v83RestartTimer = null;
+  }
+  if(v83PendingRecordTimer){
+    clearTimeout(v83PendingRecordTimer);
+    v83PendingRecordTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v83Debug("stop 예외"); }
+  }else{
+    v83Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 650);
+  }, 250);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v83ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v83StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v83ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v83StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v10.2 speech hotfix
+   Fix duplicated interim/final transcript accumulation.
+   Keep one clean rolling transcript and append only new segments after auto-restart.
+*/
+let v84PendingRecordTimer = null;
+let v84ManualStop = false;
+let v84RestartTimer = null;
+let v84HasStartedRecording = false;
+let v84CommittedText = "";
+let v84BatchText = "";
+
+function v84Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v84CleanText(t){
+  return String(t || "").replace(/\s+/g, " ").trim();
+}
+
+function v84Merge(base, add){
+  base = v84CleanText(base);
+  add = v84CleanText(add);
+  if(!base) return add;
+  if(!add) return base;
+  if(base === add) return base;
+  if(base.endsWith(add)) return base;
+  if(add.startsWith(base)) return add;
+  const bw = base.split(" ");
+  const aw = add.split(" ");
+  const max = Math.min(bw.length, aw.length);
+  for(let n=max; n>=1; n--){
+    if(bw.slice(-n).join(" ") === aw.slice(0,n).join(" ")){
+      return v84CleanText(base + " " + aw.slice(n).join(" "));
+    }
+  }
+  return v84CleanText(base + " " + add);
+}
+
+function v84GetBatchFromEvent(event){
+  let text = "";
+  for(let i=0; i<event.results.length; i++){
+    text += (event.results[i][0].transcript || "").trim() + " ";
+  }
+  return v84CleanText(text);
+}
+
+function v84CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    speechText.innerText = v84CommittedText || "음성 인식 중입니다. 종료/분석을 누를 때까지 계속 듣습니다.";
+    recordStatus.innerText = "음성인식 활성화 · 녹음과 분리 실행";
+    v84Debug("onstart OK");
+
+    if(practiceStarted && !v84HasStartedRecording){
+      v84PendingRecordTimer = setTimeout(async () => {
+        v84PendingRecordTimer = null;
+        if(practiceStarted && !v84HasStartedRecording){
+          v84HasStartedRecording = true;
+          v84Debug("녹음 시작 호출");
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }
+  };
+
+  rec.onresult = (event) => {
+    v84BatchText = v84GetBatchFromEvent(event);
+    const live = v84Merge(v84CommittedText, v84BatchText);
+    if(live) speechText.innerText = live;
+    v84Debug("onresult OK / words=" + (live ? live.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    if(msg !== "aborted"){
+      speechSupportStatus.innerText = "음성 인식 오류: " + msg + " · 자동 재시도 가능";
+    }
+    v84Debug("onerror=" + msg);
+
+    if(practiceStarted && !v84ManualStop){
+      v84ScheduleRestart();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    v84CommittedText = v84Merge(v84CommittedText, v84BatchText);
+    const out = v84CleanText(v84CommittedText);
+
+    v84Debug("onend / words=" + (out ? out.split(/\s+/).length : 0));
+
+    if(out){
+      speechText.innerText = out;
+      finalSpeechText = out;
+      interimSpeechText = "";
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 다시 말해보세요.";
+    }
+
+    if(practiceStarted && !v84ManualStop){
+      v84ScheduleRestart();
+    }else if(v84ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v84ScheduleRestart(){
+  if(v84RestartTimer) clearTimeout(v84RestartTimer);
+  v84RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v84ManualStop){
+      v84Debug("자동 재시작");
+      v84StartSpeech(false);
+    }
+  }, 300);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v84Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v84CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 중복 제거 방식 적용.";
+  v84Debug("초기화 완료");
+}
+
+function v84StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v84Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      v84CommittedText = "";
+      v84BatchText = "";
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v84CreateRecognition();
+    v84Debug("start 호출 직전");
+    recognition.start();
+    v84Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v84Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v84ManualStop = false;
+  v84HasStartedRecording = false;
+
+  recordStatus.innerText = "음성인식 시작 중...";
+  const ok = v84StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 시작합니다.";
+    v84HasStartedRecording = true;
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v84ManualStop = true;
+
+  if(v84RestartTimer){
+    clearTimeout(v84RestartTimer);
+    v84RestartTimer = null;
+  }
+  if(v84PendingRecordTimer){
+    clearTimeout(v84PendingRecordTimer);
+    v84PendingRecordTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v84Debug("stop 예외"); }
+  }else{
+    v84Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 650);
+  }, 250);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v84ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v84StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v84ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v84StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v10.2 speech hotfix
+   Main fix: do not append repeated interim chunks.
+   Use latest full transcript for each recognition session,
+   and merge only when a session truly ends/restarts.
+*/
+let v85PendingRecordTimer = null;
+let v85ManualStop = false;
+let v85RestartTimer = null;
+let v85HasStartedRecording = false;
+let v85CommittedText = "";
+let v85CurrentText = "";
+
+function v85Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v85CleanText(t){
+  return String(t || "").replace(/\s+/g, " ").trim();
+}
+
+function v85Merge(base, add){
+  base = v85CleanText(base);
+  add = v85CleanText(add);
+  if(!base) return add;
+  if(!add) return base;
+  if(base === add) return base;
+  if(base.endsWith(add)) return base;
+  if(add.startsWith(base)) return add;
+
+  const bw = base.split(" ");
+  const aw = add.split(" ");
+  const max = Math.min(bw.length, aw.length);
+  for(let n=max; n>=1; n--){
+    if(bw.slice(-n).join(" ") === aw.slice(0,n).join(" ")){
+      return v85CleanText(base + " " + aw.slice(n).join(" "));
+    }
+  }
+  return v85CleanText(base + " " + add);
+}
+
+function v85BuildCurrentTranscript(event){
+  let finalPart = "";
+  let interimPart = "";
+
+  for(let i=0; i<event.results.length; i++){
+    const txt = (event.results[i][0].transcript || "").trim();
+    if(!txt) continue;
+
+    if(event.results[i].isFinal){
+      finalPart += txt + " ";
+    }else{
+      interimPart += txt + " ";
+    }
+  }
+
+  return v85CleanText((finalPart + " " + interimPart).trim());
+}
+
+function v85CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    v85CurrentText = "";
+    speechText.innerText = v85CommittedText || "음성 인식 중입니다. 종료/분석을 누를 때까지 계속 듣습니다.";
+    recordStatus.innerText = "음성인식 활성화 · 녹음과 분리 실행";
+    v85Debug("onstart OK");
+
+    if(practiceStarted && !v85HasStartedRecording){
+      v85PendingRecordTimer = setTimeout(async () => {
+        v85PendingRecordTimer = null;
+        if(practiceStarted && !v85HasStartedRecording){
+          v85HasStartedRecording = true;
+          v85Debug("녹음 시작 호출");
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }
+  };
+
+  rec.onresult = (event) => {
+    v85CurrentText = v85BuildCurrentTranscript(event);
+    const displayText = v85Merge(v85CommittedText, v85CurrentText);
+
+    if(displayText){
+      speechText.innerText = displayText;
+    }
+
+    v85Debug("onresult OK / words=" + (displayText ? displayText.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    if(msg !== "aborted"){
+      speechSupportStatus.innerText = "음성 인식 오류: " + msg + " · 자동 재시도 가능";
+    }
+    v85Debug("onerror=" + msg);
+
+    if(practiceStarted && !v85ManualStop){
+      v85ScheduleRestart();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    v85CommittedText = v85Merge(v85CommittedText, v85CurrentText);
+    const out = v85CleanText(v85CommittedText);
+
+    v85Debug("onend / words=" + (out ? out.split(/\s+/).length : 0));
+
+    if(out){
+      speechText.innerText = out;
+      finalSpeechText = out;
+      interimSpeechText = "";
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 다시 말해보세요.";
+    }
+
+    if(practiceStarted && !v85ManualStop){
+      v85ScheduleRestart();
+    }else if(v85ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v85ScheduleRestart(){
+  if(v85RestartTimer) clearTimeout(v85RestartTimer);
+  v85RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v85ManualStop){
+      v85Debug("자동 재시작");
+      v85StartSpeech(false);
+    }
+  }, 350);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v85Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v85CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 중복 제거 방식 적용.";
+  v85Debug("초기화 완료");
+}
+
+function v85StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v85Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      v85CommittedText = "";
+      v85CurrentText = "";
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v85CreateRecognition();
+    v85Debug("start 호출 직전");
+    recognition.start();
+    v85Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v85Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v85ManualStop = false;
+  v85HasStartedRecording = false;
+
+  recordStatus.innerText = "음성인식 시작 중...";
+  const ok = v85StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 시작합니다.";
+    v85HasStartedRecording = true;
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v85ManualStop = true;
+
+  if(v85RestartTimer){
+    clearTimeout(v85RestartTimer);
+    v85RestartTimer = null;
+  }
+  if(v85PendingRecordTimer){
+    clearTimeout(v85PendingRecordTimer);
+    v85PendingRecordTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v85Debug("stop 예외"); }
+  }else{
+    v85Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 650);
+  }, 250);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v85ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v85StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v85ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v85StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v10.2 speech-first mode
+   Android Chrome often cannot feed SpeechRecognition and MediaRecorder at the same time.
+   So the main Practice button runs speech recognition only.
+   Recording is available through separate "녹음만 시작/종료" buttons.
+*/
+let v86ManualStop = false;
+let v86RestartTimer = null;
+let v86CommittedText = "";
+let v86CurrentText = "";
+
+function v86Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v86CleanText(t){
+  return String(t || "").replace(/\s+/g, " ").trim();
+}
+
+function v86DedupeWords(text){
+  const words = v86CleanText(text).split(" ").filter(Boolean);
+  if(words.length <= 2) return words.join(" ");
+
+  // remove immediate repeated word runs: hello hello hello -> hello
+  const out = [];
+  for(const w of words){
+    const last = out[out.length-1];
+    if(last && last.toLowerCase() === w.toLowerCase()) continue;
+    out.push(w);
+  }
+
+  // simple repeated phrase cleanup for common rolling interim artifacts
+  let s = out.join(" ");
+  const patterns = [
+    /\b(hello my name is)\s+\1\b/gi,
+    /\b(my name is)\s+\1\b/gi,
+    /\b(hello my name)\s+\1\b/gi,
+    /\b(hello my)\s+\1\b/gi
+  ];
+  for(const p of patterns){
+    while(p.test(s)) s = s.replace(p, "$1");
+  }
+  return v86CleanText(s);
+}
+
+function v86Merge(base, add){
+  base = v86DedupeWords(base);
+  add = v86DedupeWords(add);
+  if(!base) return add;
+  if(!add) return base;
+  if(base === add) return base;
+  if(base.endsWith(add)) return base;
+  if(add.startsWith(base)) return add;
+
+  const bw = base.split(" ");
+  const aw = add.split(" ");
+  const max = Math.min(bw.length, aw.length);
+  for(let n=max; n>=1; n--){
+    if(bw.slice(-n).join(" ").toLowerCase() === aw.slice(0,n).join(" ").toLowerCase()){
+      return v86DedupeWords(base + " " + aw.slice(n).join(" "));
+    }
+  }
+  return v86DedupeWords(base + " " + add);
+}
+
+function v86BuildCurrentTranscript(event){
+  let latestFinal = "";
+  let latestInterim = "";
+
+  // Use only the current event's latest transcript, not appending every interim chunk.
+  for(let i=0; i<event.results.length; i++){
+    const txt = (event.results[i][0].transcript || "").trim();
+    if(!txt) continue;
+    if(event.results[i].isFinal) latestFinal += txt + " ";
+    else latestInterim = txt; // keep only latest interim
+  }
+
+  return v86DedupeWords((latestFinal + " " + latestInterim).trim());
+}
+
+function v86CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    speechText.innerText = v86CommittedText || "음성 인식 중입니다. 종료/분석을 누를 때까지 계속 듣습니다.";
+    recordStatus.innerText = "음성인식 분석 중 · 녹음은 별도 실행";
+    v86Debug("onstart OK / speech-only");
+  };
+
+  rec.onresult = (event) => {
+    v86CurrentText = v86BuildCurrentTranscript(event);
+    const displayText = v86Merge(v86CommittedText, v86CurrentText);
+    if(displayText) speechText.innerText = displayText;
+    v86Debug("onresult OK / words=" + (displayText ? displayText.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    if(msg !== "aborted") speechSupportStatus.innerText = "음성 인식 오류: " + msg;
+    v86Debug("onerror=" + msg);
+    if(practiceStarted && !v86ManualStop) v86ScheduleRestart();
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    v86CommittedText = v86Merge(v86CommittedText, v86CurrentText);
+    const out = v86DedupeWords(v86CommittedText);
+    v86Debug("onend / words=" + (out ? out.split(/\s+/).length : 0));
+
+    if(out){
+      speechText.innerText = out;
+      finalSpeechText = out;
+      interimSpeechText = "";
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. 다시 말해보세요.";
+    }
+
+    if(practiceStarted && !v86ManualStop){
+      v86ScheduleRestart();
+    }else if(v86ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v86ScheduleRestart(){
+  if(v86RestartTimer) clearTimeout(v86RestartTimer);
+  v86RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v86ManualStop){
+      v86Debug("자동 재시작");
+      v86StartSpeech(false);
+    }
+  }, 350);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v86Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v86CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 음성인식/녹음 분리 방식.";
+  v86Debug("초기화 완료");
+}
+
+function v86StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v86Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      v86CommittedText = "";
+      v86CurrentText = "";
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v86CreateRecognition();
+    v86Debug("start 호출 직전");
+    recognition.start();
+    v86Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v86Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v86ManualStop = false;
+
+  recordStatus.innerText = "음성인식 분석 시작 중...";
+  const ok = v86StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 사용하세요.";
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v86ManualStop = true;
+
+  if(v86RestartTimer){
+    clearTimeout(v86RestartTimer);
+    v86RestartTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v86Debug("stop 예외"); }
+  }else{
+    v86Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(analyzeSpeech, 550);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v86ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+  const ok = v86StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v86ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 말한 뒤 종료/분석을 눌러주세요.";
+  const ok = v86StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+async function startRecordingPracticeOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){}
+  }
+  practiceStarted = false;
+  resetPracticeStatus();
+  recordStatus.innerText = "녹음만 시작 중...";
+  await startRecordingOnly();
+}
+
+function stopRecordingPracticeOnly(){
+  stopRecordingOnly();
+}
+</script>
+
+
+<script>
+/* v10.2 speech hotfix
+   Final-only mode:
+   - Do not show/save interim result.
+   - Save only isFinal transcript.
+   - This prevents "show me / show me my / show me my favorite..." duplication.
+*/
+let v87ManualStop = false;
+let v87RestartTimer = null;
+let v87FinalText = "";
+let v87FinalSegments = [];
+
+function v87Debug(msg){
+  try{ speechDebugStatus.innerText = "디버그: " + msg; }catch(e){}
+}
+
+function v87CleanText(t){
+  return String(t || "").replace(/\s+/g, " ").trim();
+}
+
+function v87NormalizeForCompare(t){
+  return v87CleanText(t).toLowerCase().replace(/[.,!?;:]/g, "");
+}
+
+function v87AddSegment(seg){
+  seg = v87CleanText(seg);
+  if(!seg) return;
+
+  const norm = v87NormalizeForCompare(seg);
+  if(!norm) return;
+
+  // prevent exact duplicate final segment
+  const exists = v87FinalSegments.some(x => v87NormalizeForCompare(x) === norm);
+  if(exists) return;
+
+  // prevent adding a shorter chunk already included in longer chunk
+  const included = v87FinalSegments.some(x => v87NormalizeForCompare(x).includes(norm));
+  if(included) return;
+
+  // if new longer chunk contains old shorter chunks, remove old ones
+  v87FinalSegments = v87FinalSegments.filter(x => !norm.includes(v87NormalizeForCompare(x)));
+
+  v87FinalSegments.push(seg);
+  v87FinalText = v87CleanText(v87FinalSegments.join(" "));
+}
+
+function v87CreateRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    recognizing = true;
+    speechText.innerText = v87FinalText || "음성 인식 중입니다. 최종 인식 문장만 표시합니다.";
+    recordStatus.innerText = "음성인식 분석 중 · 녹음은 별도 실행";
+    v87Debug("onstart OK / final-only");
+  };
+
+  rec.onresult = (event) => {
+    let gotFinal = false;
+    let latestInterim = "";
+
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const txt = (event.results[i][0].transcript || "").trim();
+      if(!txt) continue;
+
+      if(event.results[i].isFinal){
+        v87AddSegment(txt);
+        gotFinal = true;
+      }else{
+        latestInterim = txt;
+      }
+    }
+
+    if(v87FinalText){
+      speechText.innerText = v87FinalText;
+    }else if(latestInterim){
+      speechText.innerText = "듣는 중: " + latestInterim;
+    }
+
+    v87Debug("onresult / final=" + (gotFinal ? "Y" : "N") + " / words=" + (v87FinalText ? v87FinalText.split(/\s+/).length : 0));
+  };
+
+  rec.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    if(msg !== "aborted") speechSupportStatus.innerText = "음성 인식 오류: " + msg;
+    v87Debug("onerror=" + msg);
+
+    if(practiceStarted && !v87ManualStop){
+      v87ScheduleRestart();
+    }
+  };
+
+  rec.onend = () => {
+    recognizing = false;
+    const out = v87CleanText(v87FinalText);
+    v87Debug("onend / words=" + (out ? out.split(/\s+/).length : 0));
+
+    if(out){
+      speechText.innerText = out;
+      finalSpeechText = out;
+      interimSpeechText = "";
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "최종 인식 문장이 없습니다. 조금 더 길게 말해보세요.";
+    }
+
+    if(practiceStarted && !v87ManualStop){
+      v87ScheduleRestart();
+    }else if(v87ManualStop){
+      setTimeout(analyzeSpeech, 300);
+    }
+  };
+
+  return rec;
+}
+
+function v87ScheduleRestart(){
+  if(v87RestartTimer) clearTimeout(v87RestartTimer);
+  v87RestartTimer = setTimeout(() => {
+    if(practiceStarted && !v87ManualStop){
+      v87Debug("자동 재시작");
+      v87StartSpeech(false);
+    }
+  }, 400);
+}
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  speechSupported = !!SR;
+
+  if(!speechSupported){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    v87Debug("SpeechRecognition 객체 없음");
+    return;
+  }
+
+  recognition = v87CreateRecognition();
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v10.2 최종 문장 전용 방식.";
+  v87Debug("초기화 완료");
+}
+
+function v87StartSpeech(resetText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    v87Debug("start 실패: API 없음");
+    return false;
+  }
+
+  try{
+    if(recognition && recognizing){
+      try{ recognition.abort(); }catch(e){}
+    }
+
+    if(resetText){
+      v87FinalText = "";
+      v87FinalSegments = [];
+      finalSpeechText = "";
+      interimSpeechText = "";
+    }
+
+    recognition = v87CreateRecognition();
+    v87Debug("start 호출 직전");
+    recognition.start();
+    v87Debug("start 호출 완료");
+    return true;
+  }catch(e){
+    const msg = (e && (e.name || e.message)) ? ((e.name || "") + " " + (e.message || "")) : String(e);
+    speechSupportStatus.innerText = "음성인식 start 실패: " + msg;
+    v87Debug("start 예외: " + msg);
+    return false;
+  }
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  practiceStarted = true;
+  v87ManualStop = false;
+
+  recordStatus.innerText = "음성인식 분석 시작 중...";
+  const ok = v87StartSpeech(true);
+
+  if(!ok){
+    recordStatus.innerText = "음성인식 실패 · 녹음만 사용하세요.";
+  }
+}
+
+function stopPractice(){
+  practiceStarted = false;
+  v87ManualStop = true;
+
+  if(v87RestartTimer){
+    clearTimeout(v87RestartTimer);
+    v87RestartTimer = null;
+  }
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){ v87Debug("stop 예외"); }
+  }else{
+    v87Debug("stop 시 recognizing=false");
+  }
+
+  setTimeout(analyzeSpeech, 550);
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  practiceStarted = false;
+  v87ManualStop = true;
+  speechText.innerText = "인식만 재시도 중입니다. 최종 문장만 표시합니다.";
+  const ok = v87StartSpeech(true);
+  if(!ok) alert("음성인식 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+
+function speechOnlyTest(){
+  practiceStarted = false;
+  v87ManualStop = true;
+  speechText.innerText = "음성 테스트 중입니다. 최종 인식 문장만 표시합니다.";
+  const ok = v87StartSpeech(true);
+  if(!ok) alert("음성 테스트 시작 실패입니다. 디버그 문구를 확인해 주세요.");
+}
+</script>
+
+
+<script>
+/* v10.2 integrated UX helpers */
+function toggleSettings(){
+  const el = document.getElementById("settingsCard");
+  if(!el) return;
+  el.classList.toggle("open");
+  if(el.classList.contains("open")) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function goQuestion(){
+  const el = document.getElementById("questionBox");
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function goAnswer(){
+  const el = document.getElementById("answer");
+  if(el) el.closest(".card").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function showAnswerAndScroll(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  const editor = document.getElementById("answerEditor");
+  if(editor && editor.style.display === "block") return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");
+  const answerBox = document.getElementById("answer");
+  if(answerBox) answerBox.style.display = "block";
+  setTimeout(goAnswer, 80);
+}
+function playLastRecording(){
+  if(audioPlayer && audioPlayer.src){
+    audioPlayer.classList.remove("hidden");
+    audioPlayer.scrollIntoView({behavior:"smooth",block:"center"});
+    audioPlayer.play().catch(()=>{});
+  }else{
+    alert("재생할 녹음이 없습니다. 먼저 녹음만 시작/종료로 녹음하세요.");
+  }
+}
+async function startRecordingPracticeOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){}
+  }
+  practiceStarted = false;
+  resetPracticeStatus();
+  recordStatus.innerText = "녹음만 시작 중...";
+  await startRecordingOnly();
+}
+function stopRecordingPracticeOnly(){
+  stopRecordingOnly();
+}
+if(typeof scrollToQuestion === "function"){
+  scrollToQuestion = goQuestion;
+}
+const __v10_pickRandomQuestion = pickRandomQuestion;
+pickRandomQuestion = function(){
+  __v10_pickRandomQuestion();
+  setTimeout(goQuestion,120);
+}
+const __v10_stopPractice = stopPractice;
+stopPractice = function(){
+  __v10_stopPractice();
+  const metric = document.querySelector(".metricGrid");
+  if(metric) setTimeout(()=>metric.closest(".card").scrollIntoView({behavior:"smooth",block:"start"}),350);
+}
+</script>
+
+
+<script>
+/* v10.2 UX helpers */
+function toggleSettings(){const el=document.getElementById("settingsCard");if(!el)return;el.classList.toggle("open");if(el.classList.contains("open"))el.scrollIntoView({behavior:"smooth",block:"start"});}
+function setActiveTab(name){["tabQuestion","tabAnswer","tabAnalysis"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("active")});const active=document.getElementById(name);if(active)active.classList.add("active");}
+function goQuestion(){setActiveTab("tabQuestion");const el=document.getElementById("questionBox");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
+function goAnswer(){setActiveTab("tabAnswer");const el=document.getElementById("answer");if(el)el.closest(".card").scrollIntoView({behavior:"smooth",block:"start"});}
+function goAnalysis(){setActiveTab("tabAnalysis");const metric=document.querySelector(".metricGrid");if(metric)metric.closest(".card").scrollIntoView({behavior:"smooth",block:"start"});}
+function showAnswerAndScroll(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");const editor=document.getElementById("answerEditor");if(editor&&editor.style.display==="block")return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");const answerBox=document.getElementById("answer");if(answerBox)answerBox.style.display="block";setTimeout(goAnswer,80);}
+function playLastRecording(){if(audioPlayer&&audioPlayer.src){audioPlayer.classList.remove("hidden");audioPlayer.scrollIntoView({behavior:"smooth",block:"center"});audioPlayer.play().catch(()=>{});}else{alert("재생할 녹음이 없습니다. 먼저 녹음만 시작/종료로 녹음하세요.");}}
+async function startRecordingPracticeOnly(){if(!currentItem)return alert("먼저 문제를 뽑으세요.");if(recognition&&recognizing){try{recognition.stop();}catch(e){}}practiceStarted=false;resetPracticeStatus();recordStatus.innerText="녹음만 시작 중...";await startRecordingOnly();}
+function stopRecordingPracticeOnly(){stopRecordingOnly();}
+const __v102_pickRandomQuestion=pickRandomQuestion;pickRandomQuestion=function(){__v102_pickRandomQuestion();setTimeout(goQuestion,120);}
+const __v102_stopPractice=stopPractice;stopPractice=function(){__v102_stopPractice();setTimeout(goAnalysis,350);}
+</script>
+
+</body>
+</html>
