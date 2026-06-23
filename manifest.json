@@ -1,7 +1,7 @@
 {
   "name": "OPIc 실전 암기툴",
   "short_name": "OPIc암기",
-  "description": "OPIc 문제 랜덤 출제, 답변 숨김, 녹음, 음성 텍스트 전환, 시험모드",
+  "description": "OPIc 문제 랜덤 출제, 녹음, 시험모드, 암기상태 관리",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
