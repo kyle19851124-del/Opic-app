@@ -88,6 +88,13 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
     </div>
   </div>
 
+  
+  <div class="card">
+    <div class="label">백호 마스코트 시안</div>
+    <img src="baekho-mascot-set.png" alt="백호 마스코트" style="width:100%;border-radius:16px;border:1px solid var(--border);" />
+    <div class="small">선택한 백호 3종 시안입니다. 실제 앱 배치 적용 전 미리보기용입니다.</div>
+  </div>
+
   <div id="questionBox" class="card chatCard">
     <div class="label">질문</div>
     <div id="meta"></div><div id="badges"></div><div id="question">아래 버튼을 눌러 문제를 뽑으세요.</div>
@@ -293,5 +300,161 @@ function resetScreen(){currentItem=null;resetPracticeStatus();clearAnalysis(fals
 if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
 init();
 </script>
+
+<script>
+/* v7 speech/recording hotfix: v3-style recognition restored + separated from recording */
+let v7SpeechStopRequested = false;
+let v7PracticeStarted = false;
+
+function setupSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    speechSupportStatus.innerText = "음성 인식 미지원 환경입니다. 녹음은 가능합니다.";
+    speechSupported = false;
+    return;
+  }
+
+  speechSupported = true;
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v3 방식 복구: 인식 시작 → 1초 후 녹음 시작.";
+
+  recognition = new SR();
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => {
+    recognizing = true;
+    finalSpeechText = "";
+    interimSpeechText = "";
+    v7SpeechStopRequested = false;
+    speechText.innerText = "음성 인식 중입니다. 종료 후 최종 문장을 표시합니다.";
+    recordStatus.innerText = "음성인식 시작됨 · 1초 후 녹음 시작";
+  };
+
+  recognition.onresult = (event) => {
+    let interim = "";
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const txt = event.results[i][0].transcript;
+      if(event.results[i].isFinal){
+        finalSpeechText += txt.trim() + " ";
+      }else{
+        interim += txt.trim() + " ";
+      }
+    }
+    interimSpeechText = interim.trim();
+  };
+
+  recognition.onerror = (event) => {
+    recognizing = false;
+    const msg = event.error || "unknown";
+    speechSupportStatus.innerText = "음성 인식 오류: " + msg + " · 녹음은 계속 가능합니다.";
+    if(!finalSpeechText && !interimSpeechText){
+      speechText.innerText = "음성 인식 오류: " + msg;
+    }
+  };
+
+  recognition.onend = () => {
+    recognizing = false;
+    const out = (finalSpeechText || interimSpeechText || "").trim();
+
+    if(out){
+      speechText.innerText = out;
+      if(currentItem){
+        currentItem.lastSpeechText = out;
+        syncCurrentToProgress();
+      }
+    }else{
+      speechText.innerText = "인식된 문장이 없습니다. ‘인식만 재시도’를 눌러 짧게 다시 말해보세요.";
+    }
+
+    if(v7SpeechStopRequested){
+      setTimeout(analyzeSpeech, 250);
+    }
+  };
+}
+
+async function startPractice(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+
+  resetPracticeStatus();
+  clearAnalysis(false);
+  v7PracticeStarted = true;
+
+  if(speechSupported && recognition){
+    try{
+      recordStatus.innerText = "음성인식 시작 중...";
+      recognition.start();
+      setTimeout(async () => {
+        if(v7PracticeStarted){
+          await startRecordingOnly();
+        }
+      }, 1000);
+    }catch(e){
+      speechSupportStatus.innerText = "음성 인식 시작 실패 · 녹음만 시작합니다.";
+      await startRecordingOnly();
+    }
+  }else{
+    recordStatus.innerText = "음성인식 미지원 · 녹음만 시작합니다.";
+    await startRecordingOnly();
+  }
+}
+
+function stopPractice(){
+  v7PracticeStarted = false;
+  v7SpeechStopRequested = true;
+
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){}
+  }
+
+  setTimeout(() => {
+    stopRecordingOnly();
+    setTimeout(analyzeSpeech, 500);
+  }, 250);
+}
+
+function startSpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if(!recognition) return alert("이 환경에서는 음성 인식을 지원하지 않습니다.");
+  if(recognizing) return;
+
+  finalSpeechText = "";
+  interimSpeechText = "";
+  v7SpeechStopRequested = false;
+
+  try{
+    recognition.start();
+  }catch(e){
+    speechSupportStatus.innerText = "음성 인식 시작 실패 · 잠시 후 다시 시도하세요.";
+  }
+}
+
+function stopSpeechOnly(doAnalyze){
+  v7SpeechStopRequested = !!doAnalyze;
+  if(recognition && recognizing){
+    try{ recognition.stop(); }catch(e){}
+  }else if(doAnalyze){
+    analyzeSpeech();
+  }
+}
+
+function retrySpeechOnly(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  if(!recognition) return alert("이 환경에서는 음성 인식을 지원하지 않습니다.");
+
+  finalSpeechText = "";
+  interimSpeechText = "";
+  v7SpeechStopRequested = true;
+  speechText.innerText = "인식만 재시도 중입니다. 짧게 다시 말해보세요.";
+
+  try{
+    recognition.start();
+  }catch(e){
+    speechSupportStatus.innerText = "음성 인식 재시도 실패 · 잠시 후 다시 시도하세요.";
+  }
+}
+</script>
+
 </body>
 </html>
