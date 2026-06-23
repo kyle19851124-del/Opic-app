@@ -1,6 +1,6 @@
 {
-  "name": "OPIc Coach v9.2",
-  "short_name": "OPIc v9.2",
+  "name": "OPIc Coach v10.0",
+  "short_name": "OPIc v10",
   "description": "OPIc 암기, 녹음, 음성인식, 답변분석",
   "start_url": "./index.html",
   "scope": "./",
