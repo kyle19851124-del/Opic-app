@@ -56,7 +56,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 </style>
 
 <style>
-/* v11.2 clean integrated UX */
+/* v11.3 clean integrated UX */
 :root{--dock-h:178px}
 .app{padding-bottom:190px!important}
 .header{padding:10px 14px}
@@ -104,7 +104,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 
 
 <style>
-/* v11.2 - C안 디자인 + v10 기능 통합 */
+/* v11.3 - C안 디자인 + v10 기능 통합 */
 :root{--dock-h:154px;--btn-red:#E53935;--btn-red-bg:#FFF3F1;--btn-green:#2F654C;--btn-cream:#FFF8EF;--line:#E8D7C3}
 .app{padding-bottom:170px!important;background:var(--bg)!important}
 .header{padding:10px 14px!important;background:var(--bg)!important}
@@ -140,7 +140,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 
 
 <style>
-/* v11.2 - settings page + swipe dock + clean C-style UX */
+/* v11.3 - settings page + swipe dock + clean C-style UX */
 :root{--v11-bg:#F4EFE7;--v11-panel:#FFF9F1;--v11-panel2:#F0DEC8;--v11-border:#E4D2BF;--v11-green:#4F7A67;--v11-green2:#2F654C;--v11-red:#E53935;--v11-brown:#7A4F2E;--v11-text:#2B2825;--dock-collapsed:38px}
 body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 .app{padding-bottom:54px!important;min-height:100vh!important;background:var(--v11-bg)!important}
@@ -166,7 +166,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 
 
 <style>
-/* v11.2 complete fixes */
+/* v11.3 complete fixes */
 :root[data-theme="light"]{
   --v11-bg:#F7F7F8!important;
   --v11-panel:#FFFFFF!important;
@@ -224,12 +224,75 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 .answerToggleOn{background:var(--v11-green)!important;color:white!important}
 </style>
 
+
+<style>
+/* v11.3 fixes */
+:root[data-theme="dark"]{
+  --v11-bg:#101512!important;
+  --v11-panel:#1B231E!important;
+  --v11-panel2:#26342C!important;
+  --v11-border:#526457!important;
+  --v11-text:#FAFAF5!important;
+  --bg:#101512!important;
+  --panel:#1B231E!important;
+  --panel2:#26342C!important;
+  --text:#FAFAF5!important;
+  --muted:#D7DED5!important;
+  --border:#526457!important;
+}
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .settingsCard,
+:root[data-theme="dark"] #questionBox{
+  color:#FAFAF5!important;
+}
+:root[data-theme="dark"] .label,
+:root[data-theme="dark"] .small,
+:root[data-theme="dark"] .summary,
+:root[data-theme="dark"] .recordStateSub,
+:root[data-theme="dark"] .sub{
+  color:#D7DED5!important;
+}
+:root[data-theme="dark"] button:not(.recordBtn):not(.primaryBtn),
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea{
+  background:#26342C!important;
+  color:#FAFAF5!important;
+  border-color:#526457!important;
+}
+:root[data-theme="dark"] .modeBtn,
+:root[data-theme="dark"] .chip,
+:root[data-theme="dark"] .dockGrid button:not(.recordBtn):not(.primaryBtn){
+  background:#26342C!important;
+  color:#FAFAF5!important;
+  border-color:#526457!important;
+}
+#clearStarsBtn,
+button[onclick="clearStars()"]{
+  display:none!important;
+}
+.recordStateCard.open{
+  display:grid!important;
+}
+.recordStateCard{
+  min-height:94px!important;
+}
+.recordStateCard.recording{
+  border-color:#E53935!important;
+  box-shadow:0 0 0 2px rgba(229,57,53,.12),0 4px 14px rgba(73,52,31,.08)!important;
+}
+.recordStateCard.done{
+  border-color:#4F7A67!important;
+}
+.star{cursor:pointer!important}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div class="headerRow">
-      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v11.2</span></div></div>
+      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v11.3</span></div></div>
       <button class="light" onclick="openSettingsPage()" style="max-width:82px;margin:0;padding:8px;font-size:13px">⚙ 설정</button>
     </div>
     <div class="summary">총 <span id="totalCount"></span>개 · 어려움 <span id="hardCount"></span> · 틀림 <span id="wrongCount"></span> · 암기완료 <span id="doneCount"></span></div>
@@ -254,7 +317,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
     <button class="iconBtn" onclick="toggleHard()"><span class="ico">☆</span><span>어려움</span></button>
     <button class="iconBtn ok" onclick="markSuccess()"><span class="ico">✓</span><span>성공</span></button>
     <button class="iconBtn fail" onclick="markFail()"><span class="ico">×</span><span>실패</span></button>
-    <button class="iconBtn" onclick="clearStars()"><span class="ico">☆</span><span>별 해제</span></button>
+    
     <button class="iconBtn" onclick="editAnswer()"><span class="ico">✎</span><span>수정</span></button>
     <button class="iconBtn" onclick="saveAnswer()"><span class="ico">▣</span><span>저장</span></button>
     <button class="iconBtn" onclick="retrySpeechOnly()"><span class="ico">↺</span><span>인식 재시도</span></button>
@@ -279,7 +342,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
     <div class="label">질문</div>
     <div id="meta"></div><div id="badges"></div><div id="question">랜덤 문제를 뽑으세요.</div>
     <div class="grid2" style="margin-top:12px"><button class="light" onclick="toggleAnswerAndScroll()">👁 모범답안 보기</button><button class="light" onclick="toggleHard()">☆ 어려움</button></div>
-    <div style="margin-top:10px">암기 별점: <span class="star" onclick="setStars(1)">★</span><span class="star" onclick="setStars(2)">★</span><span class="star" onclick="setStars(3)">★</span></div>
+    <div style="margin-top:10px">암기 별점: <span class="star" onclick="toggleStar(1)">★</span><span class="star" onclick="toggleStar(2)">★</span><span class="star" onclick="toggleStar(3)">★</span></div>
   </div>
 
   <div class="card">
@@ -328,7 +391,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
       <button class="warn" onclick="toggleHard()">☆ 어려움</button>
     </div>
     <div class="editActions">
-      <button class="light" onclick="clearStars()">☆ 별 해제</button>
+      
       <button class="light" onclick="toggleAnswerAndScroll()">👁 답변</button>
       <button class="light" onclick="editAnswer()">✎ 수정</button>
       <button class="secondary" onclick="saveAnswer()">▣ 저장</button>
@@ -389,7 +452,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
   </div>
   <div class="settingsCard">
     <h3>앱 정보</h3>
-    <div class="settingRow"><span>버전</span><strong>v11.2</strong></div>
+    <div class="settingRow"><span>버전</span><strong>v11.3</strong></div>
     <div class="settingRow"><span>백호 이미지</span><span>GitHub 업로드 이미지 사용</span></div>
   </div>
 </div>
@@ -410,7 +473,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 </div>
 
 
-<!-- v11.2 compatibility controls for legacy JS functions -->
+<!-- v11.3 compatibility controls for legacy JS functions -->
 <div id="legacyControls" style="display:none">
   <select id="themeSelect">
     <option value="comfort">눈편한</option>
@@ -502,7 +565,7 @@ init();
 </script>
 
 <script>
-/* v11.2 speech hotfix
+/* v11.3 speech hotfix
    Key change: create SpeechRecognition every run, start speech first,
    start recording only after recognition.onstart + 1000ms.
 */
@@ -608,7 +671,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v82CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 방식 적용.";
   v82Debug("초기화 완료");
 }
 
@@ -696,7 +759,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.2 speech hotfix
+/* v11.3 speech hotfix
    continuous=true + auto restart while practice is active.
    This fixes "only okay / first word recognized" on mobile Chrome.
 */
@@ -813,7 +876,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v83CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 연속 인식 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 연속 인식 방식 적용.";
   v83Debug("초기화 완료");
 }
 
@@ -911,7 +974,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.2 speech hotfix
+/* v11.3 speech hotfix
    Fix duplicated interim/final transcript accumulation.
    Keep one clean rolling transcript and append only new segments after auto-restart.
 */
@@ -1055,7 +1118,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v84CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 중복 제거 방식 적용.";
   v84Debug("초기화 완료");
 }
 
@@ -1155,7 +1218,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.2 speech hotfix
+/* v11.3 speech hotfix
    Main fix: do not append repeated interim chunks.
    Use latest full transcript for each recognition session,
    and merge only when a session truly ends/restarts.
@@ -1316,7 +1379,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v85CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 중복 제거 방식 적용.";
   v85Debug("초기화 완료");
 }
 
@@ -1416,7 +1479,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.2 speech-first mode
+/* v11.3 speech-first mode
    Android Chrome often cannot feed SpeechRecognition and MediaRecorder at the same time.
    So the main Practice button runs speech recognition only.
    Recording is available through separate "녹음만 시작/종료" buttons.
@@ -1576,7 +1639,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v86CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 음성인식/녹음 분리 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 음성인식/녹음 분리 방식.";
   v86Debug("초기화 완료");
 }
 
@@ -1681,7 +1744,7 @@ function stopRecordingPracticeOnly(){
 
 
 <script>
-/* v11.2 speech hotfix
+/* v11.3 speech hotfix
    Final-only mode:
    - Do not show/save interim result.
    - Save only isFinal transcript.
@@ -1827,7 +1890,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v87CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.2 최종 문장 전용 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.3 최종 문장 전용 방식.";
   v87Debug("초기화 완료");
 }
 
@@ -1917,7 +1980,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.2 integrated UX helpers */
+/* v11.3 integrated UX helpers */
 function toggleSettings(){
   const el = document.getElementById("settingsCard");
   if(!el) return;
@@ -1980,7 +2043,7 @@ stopPractice = function(){
 
 
 <script>
-/* v11.2 UX helpers */
+/* v11.3 UX helpers */
 function toggleSettings(){const el=document.getElementById("settingsCard");if(!el)return;el.classList.toggle("open");if(el.classList.contains("open"))el.scrollIntoView({behavior:"smooth",block:"start"});}
 function setActiveTab(name){["tabQuestion","tabAnswer","tabAnalysis"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("active")});const active=document.getElementById(name);if(active)active.classList.add("active");}
 function goQuestion(){setActiveTab("tabQuestion");const el=document.getElementById("questionBox");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
@@ -1996,7 +2059,7 @@ const __v102_stopPractice=stopPractice;stopPractice=function(){__v102_stopPracti
 
 
 <script>
-/* v11.2 UX */
+/* v11.3 UX */
 let dockTouchStartY=null;
 function openSettingsPage(){const el=document.getElementById("settingsPage");if(el)el.classList.add("open");}
 function closeSettingsPage(){const el=document.getElementById("settingsPage");if(el)el.classList.remove("open");}
@@ -2019,7 +2082,7 @@ const __v11_stopPractice=stopPractice;stopPractice=function(){__v11_stopPractice
 
 
 <script>
-/* v11.2 fix: restore hidden legacy controls + working settings + robust random button */
+/* v11.3 fix: restore hidden legacy controls + working settings + robust random button */
 let v11CategoryKey = localStorage.getItem("opicV11CategoryKey") || "";
 
 function v111SetActiveButtons(selector, clicked){
@@ -2134,7 +2197,7 @@ window.addEventListener("load", () => {
 
 
 <script>
-/* v11.2 complete behavior fixes */
+/* v11.3 complete behavior fixes */
 let v112CategoryKey = localStorage.getItem("opicV112CategoryKey") || "";
 let v112RecordingState = "idle";
 
@@ -2309,6 +2372,180 @@ window.addEventListener("load", () => {
   setBlueFilterV112(blue);
   document.querySelectorAll(".chip").forEach(b => {
     if((b.dataset.cat || "") === v112CategoryKey) b.classList.add("active");
+    else b.classList.remove("active");
+  });
+});
+</script>
+
+
+<script>
+/* v11.3 behavior fixes */
+let v113CategoryKey = localStorage.getItem("opicV112CategoryKey") || localStorage.getItem("opicV113CategoryKey") || "";
+let v113LastQuestionKey = null;
+
+/* keep dock state until user changes it */
+function goQuestion(){
+  setActiveTab && setActiveTab("tabQuestion");
+  const el=document.getElementById("questionBox");
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function goAnswer(){
+  setActiveTab && setActiveTab("tabAnswer");
+  const el=document.getElementById("answer");
+  if(el) el.closest(".card").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function goAnalysis(){
+  setActiveTab && setActiveTab("tabAnalysis");
+  const metric=document.querySelector(".metricGrid");
+  if(metric) metric.closest(".card").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* star toggle: same star click clears, lower/higher click adjusts */
+function toggleStar(n){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  const cur = currentItem.stars || 0;
+  if(cur === n) currentItem.stars = 0;
+  else currentItem.stars = n;
+  if(currentItem.stars >= 3) currentItem.isWrong = false;
+  try{ syncCurrentToProgress(); }catch(e){}
+  try{ renderStars(currentItem.stars || 0); }catch(e){}
+  try{ renderBadges(); renderBoxStatus(); updateSummary(); }catch(e){}
+}
+
+/* robust topic/category matching */
+function v113ItemText(item){
+  return [
+    item.id, item.key, item.category, item.topic, item.docName, item.question, item.answer,
+    ...(item.questionHighlights || []), ...(item.answerEmphasis || [])
+  ].join(" ").toLowerCase();
+}
+function v113MatchCategory(item, key){
+  if(!key) return true;
+  const t = v113ItemText(item);
+  const map = {
+    house:["house","home","room","furniture","sofa","apartment","living","bedroom","kitchen","집","방","가구","소파","아파트"],
+    park:["park","walk","walking","trail","공원","산책"],
+    travel:["travel","trip","vacation","hotel","airport","여행","휴가","호텔"],
+    exercise:["exercise","workout","gym","running","bike","bicycle","운동","자전거","헬스"],
+    unexpected:["unexpected","problem","issue","trouble","broke","repair","accident","돌발","문제","고장","수리","경험"]
+  };
+  return (map[key] || [key]).some(k => t.includes(k));
+}
+function setCategoryFromSettingsV112(key, btn){ setCategoryFromSettingsV113(key, btn); }
+function setCategoryFromSettingsV113(key, btn){
+  v113CategoryKey = key || "";
+  localStorage.setItem("opicV113CategoryKey", v113CategoryKey);
+  localStorage.setItem("opicV112CategoryKey", v113CategoryKey);
+  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+}
+
+/* Override filtered list without depending on hidden selects */
+getFilteredItems = function(){
+  let list = Array.isArray(opicItems) ? opicItems : [];
+  return list.filter(item => v113MatchCategory(item, v113CategoryKey));
+};
+
+/* New problem must actually rotate if multiple items exist */
+pickRandomQuestion = function(){
+  const list = getFilteredItems();
+  if(!list.length){
+    alert("선택한 토픽에 맞는 문제가 없습니다. 설정에서 전체를 선택해 주세요.");
+    return;
+  }
+  let candidates = list;
+  if(list.length > 1 && currentItem){
+    const curKey = (currentItem.id || currentItem.key || currentItem.question || "");
+    candidates = list.filter(i => (i.id || i.key || i.question || "") !== curKey);
+    if(!candidates.length) candidates = list;
+  }
+  currentItem = candidates[Math.floor(Math.random()*candidates.length)];
+  v113LastQuestionKey = currentItem.id || currentItem.key || currentItem.question || "";
+  try{ renderCurrentItem(false); }catch(e){}
+  try{ randomMascot(); }catch(e){}
+  setTimeout(goQuestion,120);
+};
+
+/* Answer toggle stays */
+function toggleAnswerAndScroll(){
+  if(!currentItem) return alert("먼저 문제를 뽑으세요.");
+  const editor=document.getElementById("answerEditor");
+  if(editor && editor.style.display==="block") return alert("수정 중에는 답변 보기/숨기기를 사용할 수 없습니다.");
+  const answerBox=document.getElementById("answer");
+  if(!answerBox) return;
+  const isOpen = answerBox.style.display === "block";
+  answerBox.style.display = isOpen ? "none" : "block";
+  if(!isOpen) setTimeout(goAnswer,80);
+  else setTimeout(goQuestion,80);
+}
+
+/* Stronger recording state visibility */
+function updateRecordState(state){
+  const card=document.getElementById("recordStateCard");
+  const img=document.getElementById("recordStateImg");
+  const title=document.getElementById("recordStateTitle");
+  const sub=document.getElementById("recordStateSub");
+  if(!card || !img || !title || !sub) return;
+  card.classList.add("open");
+  card.classList.remove("recording","done","analyzing");
+  if(state==="recording"){
+    card.classList.add("recording");
+    img.src="baekho-focus.png";
+    title.innerText="백호가 집중해서 듣고 있어요";
+    sub.innerText="녹음 중입니다. 답변을 말해주세요.";
+  }else if(state==="done"){
+    card.classList.add("done");
+    img.src="baekho-smile.png";
+    title.innerText="녹음 완료";
+    sub.innerText="듣기 버튼으로 확인할 수 있습니다.";
+  }else if(state==="analyzing"){
+    card.classList.add("analyzing");
+    img.src="baekho-rest.png";
+    title.innerText="분석 중";
+    sub.innerText="답변 내용을 정리하고 있습니다.";
+  }else{
+    img.src="baekho-smile.png";
+    title.innerText="연습 대기 중";
+    sub.innerText="녹음 버튼을 누르면 이 영역으로 이동합니다.";
+  }
+  setTimeout(()=>card.scrollIntoView({behavior:"smooth",block:"center"}),80);
+}
+const v113OldStartRecordingPracticeOnly = startRecordingPracticeOnly;
+startRecordingPracticeOnly = async function(){
+  updateRecordState("recording");
+  return await v113OldStartRecordingPracticeOnly();
+}
+const v113OldStopRecordingPracticeOnly = stopRecordingPracticeOnly;
+stopRecordingPracticeOnly = function(){
+  v113OldStopRecordingPracticeOnly();
+  setTimeout(()=>updateRecordState("done"),250);
+}
+const v113OldStopPractice = stopPractice;
+stopPractice = function(){
+  updateRecordState("analyzing");
+  v113OldStopPractice();
+  setTimeout(goAnalysis,450);
+}
+
+/* Dark mode visibility */
+function setThemeV112(theme, btn){ setThemeV113(theme, btn); }
+function setThemeV113(theme, btn){
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("opicTheme", theme);
+  document.querySelectorAll(".modeBtn").forEach(b=>b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  else{
+    document.querySelectorAll(".modeBtn").forEach(b=>{
+      const txt=b.innerText||"";
+      if((theme==="light"&&txt.includes("라이트"))||(theme==="comfort"&&txt.includes("눈편한"))||(theme==="dark"&&txt.includes("다크"))) b.classList.add("active");
+    });
+  }
+}
+window.addEventListener("load",()=>{
+  const theme=localStorage.getItem("opicTheme")||"comfort";
+  setThemeV113(theme);
+  document.querySelectorAll(".chip").forEach(b=>{
+    if((b.dataset.cat||"")===v113CategoryKey) b.classList.add("active");
     else b.classList.remove("active");
   });
 });
