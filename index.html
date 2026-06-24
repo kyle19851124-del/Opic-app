@@ -56,7 +56,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 </style>
 
 <style>
-/* v11.6 clean integrated UX */
+/* v11.7 clean integrated UX */
 :root{--dock-h:178px}
 .app{padding-bottom:190px!important}
 .header{padding:10px 14px}
@@ -104,7 +104,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 
 
 <style>
-/* v11.6 - C안 디자인 + v10 기능 통합 */
+/* v11.7 - C안 디자인 + v10 기능 통합 */
 :root{--dock-h:154px;--btn-red:#E53935;--btn-red-bg:#FFF3F1;--btn-green:#2F654C;--btn-cream:#FFF8EF;--line:#E8D7C3}
 .app{padding-bottom:170px!important;background:var(--bg)!important}
 .header{padding:10px 14px!important;background:var(--bg)!important}
@@ -140,7 +140,7 @@ audio{width:100%;margin-top:10px}.hidden{display:none!important}.small{font-size
 
 
 <style>
-/* v11.6 - settings page + swipe dock + clean C-style UX */
+/* v11.7 - settings page + swipe dock + clean C-style UX */
 :root{--v11-bg:#F4EFE7;--v11-panel:#FFF9F1;--v11-panel2:#F0DEC8;--v11-border:#E4D2BF;--v11-green:#4F7A67;--v11-green2:#2F654C;--v11-red:#E53935;--v11-brown:#7A4F2E;--v11-text:#2B2825;--dock-collapsed:38px}
 body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 .app{padding-bottom:54px!important;min-height:100vh!important;background:var(--v11-bg)!important}
@@ -166,7 +166,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 
 
 <style>
-/* v11.6 complete fixes */
+/* v11.7 complete fixes */
 :root[data-theme="light"]{
   --v11-bg:#F7F7F8!important;
   --v11-panel:#FFFFFF!important;
@@ -226,7 +226,7 @@ body{background:var(--v11-bg)!important;color:var(--v11-text)!important}
 
 
 <style>
-/* v11.6 fixes */
+/* v11.7 fixes */
 :root[data-theme="dark"]{
   --v11-bg:#101512!important;
   --v11-panel:#1B231E!important;
@@ -289,7 +289,7 @@ button[onclick="clearStars()"]{
 
 
 <style>
-/* v11.6 final fixes: star clear, dock status, Baekho listening image */
+/* v11.7 final fixes: star clear, dock status, Baekho listening image */
 #clearStarsBtn,
 button[onclick*="clearStars"],
 button:has(.clearStars){
@@ -343,7 +343,7 @@ button:has(.clearStars){
 
 
 <style>
-/* v11.6: force dock status to follow actual recording text/timer state */
+/* v11.7: force dock status to follow actual recording text/timer state */
 .dockStatus.recording{
   background:rgba(229,57,53,.10)!important;
   border-top:1px solid rgba(229,57,53,.35)!important;
@@ -361,7 +361,7 @@ button:has(.clearStars){
 
 
 <style>
-/* v11.6 Baekho image pack + icon cleanup */
+/* v11.7 Baekho image pack + icon cleanup */
 .heroImg, .dockStatus img, #dockStatusImg, #recordStateImg {
   background:#fff!important;
 }
@@ -370,12 +370,45 @@ button:has(.clearStars){
 }
 </style>
 
+
+<style>
+/* v11.7 direct state binding */
+.hero.state-recording{
+  box-shadow:0 0 0 3px rgba(229,57,53,.18), 0 4px 16px rgba(48,37,24,.12)!important;
+}
+.hero.state-listening{
+  box-shadow:0 0 0 3px rgba(79,122,103,.18), 0 4px 16px rgba(48,37,24,.12)!important;
+}
+.hero.state-analyzing{
+  box-shadow:0 0 0 3px rgba(122,79,46,.18), 0 4px 16px rgba(48,37,24,.12)!important;
+}
+.hero.state-done{
+  box-shadow:0 0 0 3px rgba(79,122,103,.22), 0 4px 16px rgba(48,37,24,.12)!important;
+}
+.dockStatus.recording{
+  background:rgba(229,57,53,.10)!important;
+  border-top:1px solid rgba(229,57,53,.35)!important;
+}
+.dockStatus.recording .dockStatusTitle{
+  color:#E53935!important;
+}
+.dockStatus.listening{
+  background:rgba(79,122,103,.10)!important;
+}
+.dockStatus.analyzing{
+  background:rgba(122,79,46,.10)!important;
+}
+.dockStatus.done{
+  background:rgba(79,122,103,.12)!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div class="headerRow">
-      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v11.6</span></div></div>
+      <div class="brand"><div class="logo">O</div><div>OPIc Coach <span style="font-size:11px;color:var(--muted)">v11.7</span></div></div>
       <button class="light" onclick="openSettingsPage()" style="max-width:82px;margin:0;padding:8px;font-size:13px">⚙ 설정</button>
     </div>
     <div class="summary">총 <span id="totalCount"></span>개 · 어려움 <span id="hardCount"></span> · 틀림 <span id="wrongCount"></span> · 암기완료 <span id="doneCount"></span></div>
@@ -391,11 +424,11 @@ button:has(.clearStars){
 
   <div class="practiceCard">
     <button onclick="startPractice()">🎙 연습 시작</button>
-    <button class="stop" onclick="stopPractice()">▮ 종료 & 분석</button>
+    <button class="stop" onclick="stopPracticeV117()">▮ 종료 & 분석</button>
   </div>
 
   <div class="iconGrid">
-    <button class="iconBtn main" onclick="pickRandomQuestion()"><span class="ico">↻</span><span>랜덤 문제</span></button>
+    <button class="iconBtn main" onclick="pickRandomQuestionV117()"><span class="ico">↻</span><span>랜덤 문제</span></button>
     <button class="iconBtn" onclick="toggleAnswer()"><span class="ico">👁</span><span>보기 답변</span></button>
     <button class="iconBtn" onclick="toggleHard()"><span class="ico">☆</span><span>어려움</span></button>
     <button class="iconBtn ok" onclick="markSuccess()"><span class="ico">✓</span><span>성공</span></button>
@@ -433,8 +466,8 @@ button:has(.clearStars){
     <div class="timer" id="recordTimer">00:00</div>
     <div class="sub" id="recordStatus">대기 중 · 연습 시작은 음성인식/분석 전용입니다.</div>
     <audio id="audioPlayer" controls class="hidden"></audio>
-    <div class="grid2" id="recordButtonsV102"><button class="light recordBtn" onclick="startRecordingPracticeOnly()">● 녹음만 시작</button><button class="light stopRecordBtn" onclick="stopRecordingPracticeOnly()">■ 녹음만 종료</button></div>
-    <div class="grid2" id="recordButtonsV10"><button class="light" onclick="startRecordingPracticeOnly()">● 녹음만 시작</button><button class="light" onclick="stopRecordingPracticeOnly()">■ 녹음만 종료</button></div>
+    <div class="grid2" id="recordButtonsV102"><button class="light recordBtn" onclick="startRecordingPracticeOnlyV117()">● 녹음만 시작</button><button class="light stopRecordBtn" onclick="stopRecordingPracticeOnlyV117()">■ 녹음만 종료</button></div>
+    <div class="grid2" id="recordButtonsV10"><button class="light" onclick="startRecordingPracticeOnlyV117()">● 녹음만 시작</button><button class="light" onclick="stopRecordingPracticeOnlyV117()">■ 녹음만 종료</button></div>
     <input id="recordFileName" placeholder="저장 파일 이름" oninput="saveRecordingSettings()" />
     <input id="recordFolderMemo" placeholder="저장 폴더 메모: 예 Download/OPIc" oninput="saveRecordingSettings()" />
     <button class="light hidden" id="downloadAudioBtn" onclick="downloadRecording()">녹음 파일 저장</button>
@@ -535,7 +568,7 @@ button:has(.clearStars){
   </div>
   <div class="settingsCard">
     <h3>앱 정보</h3>
-    <div class="settingRow"><span>버전</span><strong>v11.6</strong></div>
+    <div class="settingRow"><span>버전</span><strong>v11.7</strong></div>
     <div class="settingRow"><span>백호 이미지</span><span>GitHub 업로드 이미지 사용</span></div>
   </div>
 </div>
@@ -553,10 +586,10 @@ button:has(.clearStars){
     </div>
 
     <div class="dockGrid">
-      <button class="recordBtn" onclick="startRecordingPracticeOnly()">🔴<br>녹음</button>
-      <button class="stopBtn" onclick="stopRecordingPracticeOnly()">■<br>녹음 종료</button>
-      <button onclick="playLastRecording()">🎧<br>듣기</button>
-      <button class="primaryBtn" onclick="pickRandomQuestion()">🎲<br>새 문제</button>
+      <button class="recordBtn" onclick="startRecordingPracticeOnlyV117()">🔴<br>녹음</button>
+      <button class="stopBtn" onclick="stopRecordingPracticeOnlyV117()">■<br>녹음 종료</button>
+      <button onclick="playLastRecordingV117()">🎧<br>듣기</button>
+      <button class="primaryBtn" onclick="pickRandomQuestionV117()">🎲<br>새 문제</button>
       <button onclick="goQuestion()">📌<br>문제 보기</button>
       <button onclick="toggleAnswerAndScroll()">👁<br>답안 보기</button>
     </div>
@@ -565,7 +598,7 @@ button:has(.clearStars){
 </div>
 
 
-<!-- v11.6 compatibility controls for legacy JS functions -->
+<!-- v11.7 compatibility controls for legacy JS functions -->
 <div id="legacyControls" style="display:none">
   <select id="themeSelect">
     <option value="comfort">눈편한</option>
@@ -657,7 +690,7 @@ init();
 </script>
 
 <script>
-/* v11.6 speech hotfix
+/* v11.7 speech hotfix
    Key change: create SpeechRecognition every run, start speech first,
    start recording only after recognition.onstart + 1000ms.
 */
@@ -763,7 +796,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v82CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 방식 적용.";
   v82Debug("초기화 완료");
 }
 
@@ -851,7 +884,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.6 speech hotfix
+/* v11.7 speech hotfix
    continuous=true + auto restart while practice is active.
    This fixes "only okay / first word recognized" on mobile Chrome.
 */
@@ -968,7 +1001,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v83CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 연속 인식 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 연속 인식 방식 적용.";
   v83Debug("초기화 완료");
 }
 
@@ -1066,7 +1099,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.6 speech hotfix
+/* v11.7 speech hotfix
    Fix duplicated interim/final transcript accumulation.
    Keep one clean rolling transcript and append only new segments after auto-restart.
 */
@@ -1210,7 +1243,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v84CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 중복 제거 방식 적용.";
   v84Debug("초기화 완료");
 }
 
@@ -1310,7 +1343,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.6 speech hotfix
+/* v11.7 speech hotfix
    Main fix: do not append repeated interim chunks.
    Use latest full transcript for each recognition session,
    and merge only when a session truly ends/restarts.
@@ -1471,7 +1504,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v85CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 중복 제거 방식 적용.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 중복 제거 방식 적용.";
   v85Debug("초기화 완료");
 }
 
@@ -1571,7 +1604,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.6 speech-first mode
+/* v11.7 speech-first mode
    Android Chrome often cannot feed SpeechRecognition and MediaRecorder at the same time.
    So the main Practice button runs speech recognition only.
    Recording is available through separate "녹음만 시작/종료" buttons.
@@ -1731,7 +1764,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v86CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 음성인식/녹음 분리 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 음성인식/녹음 분리 방식.";
   v86Debug("초기화 완료");
 }
 
@@ -1836,7 +1869,7 @@ function stopRecordingPracticeOnly(){
 
 
 <script>
-/* v11.6 speech hotfix
+/* v11.7 speech hotfix
    Final-only mode:
    - Do not show/save interim result.
    - Save only isFinal transcript.
@@ -1982,7 +2015,7 @@ function setupSpeechRecognition(){
   }
 
   recognition = v87CreateRecognition();
-  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.6 최종 문장 전용 방식.";
+  speechSupportStatus.innerText = "음성 인식 API 감지됨. v11.7 최종 문장 전용 방식.";
   v87Debug("초기화 완료");
 }
 
@@ -2072,7 +2105,7 @@ function speechOnlyTest(){
 
 
 <script>
-/* v11.6 integrated UX helpers */
+/* v11.7 integrated UX helpers */
 function toggleSettings(){
   const el = document.getElementById("settingsCard");
   if(!el) return;
@@ -2135,7 +2168,7 @@ stopPractice = function(){
 
 
 <script>
-/* v11.6 UX helpers */
+/* v11.7 UX helpers */
 function toggleSettings(){const el=document.getElementById("settingsCard");if(!el)return;el.classList.toggle("open");if(el.classList.contains("open"))el.scrollIntoView({behavior:"smooth",block:"start"});}
 function setActiveTab(name){["tabQuestion","tabAnswer","tabAnalysis"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("active")});const active=document.getElementById(name);if(active)active.classList.add("active");}
 function goQuestion(){setActiveTab("tabQuestion");const el=document.getElementById("questionBox");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
@@ -2151,7 +2184,7 @@ const __v102_stopPractice=stopPractice;stopPractice=function(){__v102_stopPracti
 
 
 <script>
-/* v11.6 UX */
+/* v11.7 UX */
 let dockTouchStartY=null;
 function openSettingsPage(){const el=document.getElementById("settingsPage");if(el)el.classList.add("open");}
 function closeSettingsPage(){const el=document.getElementById("settingsPage");if(el)el.classList.remove("open");}
@@ -2174,7 +2207,7 @@ const __v11_stopPractice=stopPractice;stopPractice=function(){__v11_stopPractice
 
 
 <script>
-/* v11.6 fix: restore hidden legacy controls + working settings + robust random button */
+/* v11.7 fix: restore hidden legacy controls + working settings + robust random button */
 let v11CategoryKey = localStorage.getItem("opicV11CategoryKey") || "";
 
 function v111SetActiveButtons(selector, clicked){
@@ -2289,7 +2322,7 @@ window.addEventListener("load", () => {
 
 
 <script>
-/* v11.6 complete behavior fixes */
+/* v11.7 complete behavior fixes */
 let v112CategoryKey = localStorage.getItem("opicV112CategoryKey") || "";
 let v112RecordingState = "idle";
 
@@ -2471,7 +2504,7 @@ window.addEventListener("load", () => {
 
 
 <script>
-/* v11.6 behavior fixes */
+/* v11.7 behavior fixes */
 let v113CategoryKey = localStorage.getItem("opicV112CategoryKey") || localStorage.getItem("opicV113CategoryKey") || "";
 let v113LastQuestionKey = null;
 
@@ -2645,7 +2678,7 @@ window.addEventListener("load",()=>{
 
 
 <script>
-/* v11.6: status detection by UI text, timer, audio state, and button events */
+/* v11.7: status detection by UI text, timer, audio state, and button events */
 function setDockStatusV115(state){
   const box=document.getElementById("dockStatus");
   const img=document.getElementById("dockStatusImg");
@@ -2740,7 +2773,7 @@ updateRecordState = setDockStatusV115;
 
 
 <script>
-/* v11.6 Baekho state image mapping */
+/* v11.7 Baekho state image mapping */
 function setDockStatusImageV116(state){
   const img=document.getElementById("dockStatusImg");
   const title=document.getElementById("dockStatusTitle");
@@ -2786,6 +2819,121 @@ updateRecordState = function(state){
   setDockStatusImageV116(state);
 };
 window.addEventListener("load",()=>setTimeout(()=>setDockStatusImageV116("idle"),300));
+</script>
+
+
+<script>
+/* v11.7: direct binding for Baekho state changes */
+function setBaekhoStateV117(state){
+  const stateMap = {
+    idle: {
+      img:"baekho-hello.png",
+      title:"대기 중",
+      sub:"녹음을 시작해 보세요.",
+      heroTitle:"백호랑<br>연습 시작할까요? 🐶",
+      heroSub:"기본은 음성인식 분석,<br>녹음은 별도 실행해요."
+    },
+    recording: {
+      img:"baekho-curious.png",
+      title:"백호가 듣고 있어요",
+      sub:"녹음 중입니다. 답변을 말해주세요.",
+      heroTitle:"백호가<br>듣고 있어요! 👂",
+      heroSub:"천천히, 자연스럽게<br>답변을 말해보세요."
+    },
+    listening: {
+      img:"baekho-hello.png",
+      title:"백호가 같이 듣고 있어요",
+      sub:"방금 녹음한 답변을 확인 중입니다.",
+      heroTitle:"백호랑<br>답변 확인 중이에요 🎧",
+      heroSub:"내 답변을 들어보고<br>어색한 부분을 찾아보세요."
+    },
+    analyzing: {
+      img:"baekho-sleepy.png",
+      title:"백호가 분석 중이에요",
+      sub:"답변 내용을 정리하고 있습니다.",
+      heroTitle:"백호가<br>분석하고 있어요 🧠",
+      heroSub:"발음, 유창성, 내용 흐름을<br>확인하는 중이에요."
+    },
+    done: {
+      img:"baekho-excited.png",
+      title:"완료",
+      sub:"다음 문제로 넘어가도 좋아요.",
+      heroTitle:"분석이<br>완료됐어요! 🎉",
+      heroSub:"백호와 함께 더 좋은 답변을<br>만들어보세요."
+    }
+  };
+  const s = stateMap[state] || stateMap.idle;
+
+  const dockBox = document.getElementById("dockStatus");
+  const dockImg = document.getElementById("dockStatusImg");
+  const dockTitle = document.getElementById("dockStatusTitle");
+  const dockSub = document.getElementById("dockStatusSub");
+
+  if(dockBox){
+    dockBox.classList.remove("idle","recording","listening","analyzing","done");
+    dockBox.classList.add(state || "idle");
+  }
+  if(dockImg) dockImg.src = s.img;
+  if(dockTitle) dockTitle.innerText = s.title;
+  if(dockSub) dockSub.innerText = s.sub;
+
+  const hero = document.querySelector(".hero");
+  const heroImg = document.getElementById("heroBaekhoImg") || document.querySelector(".heroImg");
+  if(hero){
+    hero.classList.remove("state-idle","state-recording","state-listening","state-analyzing","state-done");
+    hero.classList.add("state-" + (state || "idle"));
+    const h2 = hero.querySelector("h2");
+    const p = hero.querySelector("p");
+    if(h2) h2.innerHTML = s.heroTitle;
+    if(p) p.innerHTML = s.heroSub;
+  }
+  if(heroImg) heroImg.src = s.img;
+}
+
+/* preserve existing functions but force state before/after */
+const __v117_startRecordingPracticeOnly = window.startRecordingPracticeOnly;
+window.startRecordingPracticeOnlyV117 = async function(){
+  setBaekhoStateV117("recording");
+  if(typeof __v117_startRecordingPracticeOnly === "function") return await __v117_startRecordingPracticeOnly();
+  if(typeof startRecordingOnly === "function") return await startRecordingOnly();
+};
+
+const __v117_stopRecordingPracticeOnly = window.stopRecordingPracticeOnly;
+window.stopRecordingPracticeOnlyV117 = function(){
+  if(typeof __v117_stopRecordingPracticeOnly === "function") __v117_stopRecordingPracticeOnly();
+  else if(typeof stopRecordingOnly === "function") stopRecordingOnly();
+  setTimeout(()=>setBaekhoStateV117("done"), 250);
+};
+
+const __v117_playLastRecording = window.playLastRecording;
+window.playLastRecordingV117 = function(){
+  setBaekhoStateV117("listening");
+  if(typeof __v117_playLastRecording === "function") __v117_playLastRecording();
+};
+
+const __v117_stopPractice = window.stopPractice;
+window.stopPracticeV117 = function(){
+  setBaekhoStateV117("analyzing");
+  if(typeof __v117_stopPractice === "function") __v117_stopPractice();
+  setTimeout(()=>setBaekhoStateV117("done"), 1200);
+};
+
+const __v117_pickRandomQuestion = window.pickRandomQuestion;
+window.pickRandomQuestionV117 = function(){
+  if(typeof __v117_pickRandomQuestion === "function") __v117_pickRandomQuestion();
+  setTimeout(()=>setBaekhoStateV117("idle"), 120);
+};
+
+/* also override base names in case some old buttons still call them */
+window.startRecordingPracticeOnly = window.startRecordingPracticeOnlyV117;
+window.stopRecordingPracticeOnly = window.stopRecordingPracticeOnlyV117;
+window.playLastRecording = window.playLastRecordingV117;
+window.stopPractice = window.stopPracticeV117;
+window.pickRandomQuestion = window.pickRandomQuestionV117;
+
+window.addEventListener("load",()=>{
+  setTimeout(()=>setBaekhoStateV117("idle"), 250);
+});
 </script>
 
 </body>

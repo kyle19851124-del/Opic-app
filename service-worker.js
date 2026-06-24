@@ -1,4 +1,4 @@
-const CACHE_NAME = "opic-pwa-v11-6";
+const CACHE_NAME = "opic-pwa-v11-7";
 const ASSETS = [
 "./","./index.html","./data.js","./manifest.json","./icon-192.png","./icon-512.png",
 "./baekho-smile.png","./baekho-rest.png","./baekho-focus.png","./baekho-listen.png","./baekho-mascot-set.png",
