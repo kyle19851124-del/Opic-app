@@ -1,7 +1,7 @@
 {
-  "name": "OPIc Coach v11.5",
-  "short_name": "OPIc v11.5",
-  "start_url": "./index.html?v=115",
+  "name": "OPIc Coach",
+  "short_name": "OPIc Coach",
+  "start_url": "./index.html?v=116",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F4EFE7",
